@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "id": "notenoughhuds",
+  "version": "dev",
+  "name": "NotEnoughHUDs",
+  "description": "Adds a variety of different HUDs to the game.",
+  "authors": [
+    "Redth"
+  ],
+  "contact": {
+    "homepage": "https://github.com/Redth/NotEnoughHUDs",
+    "sources": "https://github.com/Redth/NotEnoughHUDs",
+    "issues": "https://github.com/Redth/NotEnoughHUDs/issues"
+  },
+  "license": "MIT",
+  "environment": "client",
+  "entrypoints": {
+    "client": [
+      "io.github.redth.notenoughhuds.NotEnoughHUDs"
+    ]
+  },
+  "mixins": [
+    "notenoughhuds.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.14.7",
+    "fabric": "*",
+    "minecraft": "1.19.x",
+    "java": ">=17"
+  }
+}
