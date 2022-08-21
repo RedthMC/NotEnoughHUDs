@@ -1,0 +1,16 @@
+[
+{
+  "modid": "notenoughhuds",
+  "name": "NotEnoughHUDs",
+  "description": "Adds a variety of different HUDs to the game.",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "",
+  "updateUrl": "",
+  "authorList": ["Redth"],
+  "credits": "",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]
