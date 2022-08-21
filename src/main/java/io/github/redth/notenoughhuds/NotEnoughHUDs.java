@@ -84,7 +84,7 @@ public class NotEnoughHUDs implements ClientModInitializer {
             }
         });
         ClientTickEvents.END_CLIENT_TICK.register(c -> {
-            if (MinecraftClient.isHudEnabled()) for (BaseHud hud : hudManager.getEnabledHuds()) {
+            if (MinecraftClient.isHudEnabled() || BaseHud.isEditing()) for (BaseHud hud : hudManager.getEnabledHuds()) {
                 hud.tick();
             }
         });

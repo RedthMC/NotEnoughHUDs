@@ -11,7 +11,7 @@ public class ComboHud extends TextHud {
     private long lastHit;
 
     public ComboHud() {
-        super("combo", Alignment.LEFT, Alignment.TOP, 2, 2, "%combo% Combos");
+        super("combo", "%combo% Combos");
         options.add(expire);
     }
 

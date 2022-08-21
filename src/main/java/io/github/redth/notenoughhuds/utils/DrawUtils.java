@@ -114,13 +114,16 @@ public class DrawUtils extends DrawableHelper {
     }
 
     public void drawTexture(MatrixStack matrix, Identifier texture, int x, int y, int u, int v, int width, int height) {
-        RenderSystem.setShaderTexture(0, texture);
-        RenderSystem.enableBlend();
-        RenderSystem.blendFunc(GlStateManager.SrcFactor.SRC_ALPHA, GlStateManager.DstFactor.ONE_MINUS_SRC_ALPHA);
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+        resetGl();
+        mc.getTextureManager().bindTexture(texture);
         drawTexture(matrix, x, y, u, v, width, height);
         RenderSystem.disableBlend();
     }
 
-
+    public static void resetGl() {
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+        RenderSystem.enableBlend();
+        RenderSystem.blendFunc(GlStateManager.SrcFactor.SRC_ALPHA, GlStateManager.DstFactor.ONE_MINUS_SRC_ALPHA);
+        RenderSystem.defaultBlendFunc();
+    }
 }

@@ -12,7 +12,7 @@ public abstract class OptionWidget extends GuiList.GuiListEntry {
     private final NehOption<?> option;
 
     public OptionWidget(int x, int y, NehOption<?> option) {
-        super(x, y, 300, 16, Text.translatable(option.getTranslationKey()));
+        super(x, y, 328, 16, Text.translatable(option.getTranslationKey()));
         this.option = option;
         editBox = new Rect2i(x + width - 116, y + height / 2 - 6, 100, 12);
         resetButton = new Rect2i(x + width - 14, y + height / 2 - 6, 12, 12);

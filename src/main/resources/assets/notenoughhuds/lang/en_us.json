@@ -24,7 +24,7 @@
   "hud.notenoughhuds.server": "Server (WIP)",
   "hud.notenoughhuds.text": "Plain Text",
   "hud.notenoughhuds.time": "Time",
-  "hud.notenoughhuds.toggle_sprint": "Toggle Sprint",
+  "hud.notenoughhuds.sprint": "Sprint",
   "hud.notenoughhuds.tps": "TPS",
   "key.notenoughhuds.open_editor": "Open NotEnoughHuds Editor",
   "screen.notenoughhuds.settings": "Settings",
@@ -67,7 +67,7 @@
   "setting.notenoughhuds.text_color": "Text Color",
   "setting.notenoughhuds.text_shadow": "Text Shadow",
   "setting.notenoughhuds.toggled": "Toggled",
-  "setting.notenoughhuds.use_effect_color": "Use Effect Color",
+  "setting.notenoughhuds.static_name_color": "Static Name Color",
   "setting.notenoughhuds.use_status_ping": "Use Status Ping",
   "setting.notenoughhuds.value_color": "Value Color",
   "setting.notenoughhuds.vanilla": "Vanilla"

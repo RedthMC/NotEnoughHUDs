@@ -26,7 +26,7 @@ public class PingHud extends TextHud {
     public long nextPingTime;
 
     public PingHud() {
-        super("ping", Alignment.LEFT, Alignment.TOP, 2, 22, "%ping% ms");
+        super("ping", "%ping% ms");
         options.add(useStatusPing);
     }
 

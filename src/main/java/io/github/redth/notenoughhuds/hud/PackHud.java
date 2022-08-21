@@ -17,7 +17,7 @@ public class PackHud extends BaseHud {
     private static Collection<ResourcePackProfile> packs = Collections.emptyList();
 
     public PackHud() {
-        super("pack", Alignment.LEFT, Alignment.CENTER, 0, 0);
+        super("pack");
         options.add(textShadow);
         options.add(backgroundColor);
         options.add(nameColor);

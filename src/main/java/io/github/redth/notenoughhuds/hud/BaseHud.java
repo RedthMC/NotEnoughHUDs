@@ -10,6 +10,7 @@ import io.github.redth.notenoughhuds.gui.EditorScreen;
 import io.github.redth.notenoughhuds.gui.SettingsScreen;
 import io.github.redth.notenoughhuds.utils.DrawUtils;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.text.Text;
 import net.minecraft.util.math.MathHelper;
 
 import java.util.ArrayList;
@@ -21,12 +22,11 @@ public abstract class BaseHud extends DrawUtils {
     public static int screenHeight;
     public final String id;
     public final List<NehOption<?>> options = new ArrayList<>();
-    public final NehEnum horAlign;
-    public final NehEnum verAlign;
-    public final NehInteger xOffset;
-    public final NehInteger yOffset;
+    public final NehEnum horAlign = new NehEnum("horizontal_alignment", Alignment.CENTER);
+    public final NehEnum verAlign = new NehEnum("vertical_alignment", Alignment.TOP);
+    public final NehInteger xOffset = new NehInteger("x_offset", 0,  -32767, 32767);
+    public final NehInteger yOffset = new NehInteger("y_offset", 0,  -32767, 32767);
     public final NehFloat scale = new NehFloat("scale", 1.0F, 0.5F, 2.0F);
-    public long lastRendered;
     private int x;
     private int y;
     protected int width;
@@ -51,16 +51,16 @@ public abstract class BaseHud extends DrawUtils {
         setEnabled(!isEnabled());
     }
 
-    public String getTranslationKey() {
-        return "hud.notenoughhuds." + id;
+    public Text getTranslated() {
+        return Text.translatable("hud.notenoughhuds." + id);
     }
 
-    public BaseHud(String id, Alignment defaultHorAlign, Alignment defaultVerAlign, int defaultXOffset, int defaultYOffset) {
+    public BaseHud(String id) {
         this.id = id;
-        options.add(horAlign = new NehEnum("horizontal_alignment", defaultHorAlign, true));
-        options.add(verAlign = new NehEnum("vertical_alignment", defaultVerAlign, true));
-        options.add(xOffset = new NehInteger("x_offset", defaultXOffset, true, -32767, 32767));
-        options.add(yOffset = new NehInteger("y_offset", defaultYOffset, true, -32767, 32767));
+        options.add(horAlign.hidden());
+        options.add(verAlign.hidden());
+        options.add(xOffset.hidden());
+        options.add(yOffset.hidden());
         options.add(scale);
     }
 

@@ -10,7 +10,7 @@ public abstract class ItemHud extends BaseHud {
     private float y1;
 
     public ItemHud(String id, Alignment defaultHorAlign, Alignment defaultVerAlign, int defaultXOffset, int defaultYOffset) {
-        super(id, defaultHorAlign, defaultVerAlign, defaultXOffset, defaultYOffset);
+        super(id);
     }
 
     @Override

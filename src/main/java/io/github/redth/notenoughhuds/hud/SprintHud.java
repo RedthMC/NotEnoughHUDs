@@ -13,7 +13,7 @@ public class SprintHud extends BaseHud {
     private String text;
 
     public SprintHud() {
-        super("sprint", Alignment.LEFT, Alignment.TOP, 2, 2);
+        super("sprint");
         options.add(textColor);
         options.add(textShadow);
         options.add(vanilla);

@@ -9,7 +9,7 @@ public class CpsHud extends TextHud {
     private static final LongList rightClicks = new LongArrayList();
 
     public CpsHud() {
-        super("cps", Alignment.LEFT, Alignment.TOP, 2, 82, "%left% | %right% CPS");
+        super("cps", "%left% | %right% CPS");
     }
 
     @Override

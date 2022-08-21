@@ -31,7 +31,7 @@ public class CoordsHud extends BaseHud {
     private String biome;
 
     public CoordsHud() {
-        super("coords", Alignment.LEFT, Alignment.CENTER, 0, 0);
+        super("coords");
         options.add(textShadow);
         options.add(backgroundColor);
         options.add(showYaw);

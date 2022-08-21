@@ -8,11 +8,7 @@ import io.github.redth.notenoughhuds.gui.widget.OptionWidget;
 public class NehEnum extends NehOption<NehEnum.EnumType> {
 
     public NehEnum(String id, EnumType defaultValue) {
-        this(id, defaultValue, false);
-    }
-
-    public NehEnum(String id, EnumType defaultValue, boolean hidden) {
-        super(id, defaultValue, hidden);
+        super(id, defaultValue);
     }
 
     @Override

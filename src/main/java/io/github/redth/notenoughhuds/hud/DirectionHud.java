@@ -17,7 +17,7 @@ public class DirectionHud extends BaseHud {
     private static final float[] directions = new float[8];
 
     public DirectionHud() {
-        super("direction", Alignment.LEFT, Alignment.CENTER, 0, 0);
+        super("direction");
         options.add(textShadow);
         options.add(backgroundColor);
         options.add(textColor);

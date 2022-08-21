@@ -17,19 +17,19 @@ public class TextHud extends BaseHud {
     public final NehString format;
     public String text;
 
-    public TextHud(String id, Alignment defaultHorAlign, Alignment defaultVerAlign, int defaultX, int defaultY, String defaultFormat) {
-        super(id, defaultHorAlign, defaultVerAlign, defaultX, defaultY);
+    public TextHud(String id, String defaultFormat) {
+        super(id);
         options.add(textShadow);
         options.add(backgroundColor);
         options.add(showBg);
         options.add(bgWidth);
         options.add(bgHeight);
         options.add(textColor);
-        options.add(this.format = new NehString("format", defaultFormat));
+        options.add(format = new NehString("format", defaultFormat));
     }
 
     public TextHud() {
-        this("text", Alignment.LEFT, Alignment.TOP, 2, 2, "Plain Text");
+        this("text", "Plain Text");
     }
 
     @Override

@@ -8,11 +8,7 @@ import io.github.redth.notenoughhuds.gui.widget.StringWidget;
 public class NehString extends NehOption<String> {
 
     public NehString(String id, String defaultValue) {
-        super(id, defaultValue, false);
-    }
-
-    public NehString(String id, String defaultValue, boolean hidden) {
-        super(id, defaultValue, hidden);
+        super(id, defaultValue);
     }
 
     @Override

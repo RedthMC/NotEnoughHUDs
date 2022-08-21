@@ -8,7 +8,7 @@ public class TpsHud extends TextHud {
     private long time = 20000L;
 
     public TpsHud() {
-        super("tps", Alignment.LEFT, Alignment.TOP, 2, 2, "%tps% TPS");
+        super("tps", "%tps% TPS");
     }
 
     @Override

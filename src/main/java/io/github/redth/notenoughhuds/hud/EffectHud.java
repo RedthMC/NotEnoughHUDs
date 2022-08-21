@@ -21,8 +21,8 @@ public class EffectHud extends BaseHud {
     public final NehBoolean textShadow = new NehBoolean("text_shadow", true);
     public final NehColor backgroundColor = new NehColor("background_color", "80000000");
     public final NehBoolean showName = new NehBoolean("show_name", true);
+    public final NehBoolean staticNameColor = new NehBoolean("static_name_color", true);
     public final NehColor nameOrAmpColor = new NehColor("name_or_amplifier_color", "FFFFFFFF");
-    public final NehBoolean useEffectColor = new NehBoolean("use_effect_color", true);
     public final NehColor durationColor = new NehColor("duration_color", "FFAAAAAA");
     private static List<StatusEffectInstance> effects = Collections.emptyList();
 
@@ -33,13 +33,13 @@ public class EffectHud extends BaseHud {
     }
 
     public EffectHud() {
-        super("effect", Alignment.LEFT, Alignment.CENTER, 0, 0);
+        super("effect");
         options.add(textShadow);
         options.add(backgroundColor);
-        options.add(nameOrAmpColor);
-        options.add(useEffectColor);
-        options.add(durationColor);
         options.add(showName);
+        options.add(staticNameColor);
+        options.add(nameOrAmpColor);
+        options.add(durationColor);
     }
 
     public static List<StatusEffectInstance> getEffects() {
@@ -75,7 +75,7 @@ public class EffectHud extends BaseHud {
             for (StatusEffectInstance effect : effects) {
                 drawIcon(matrix, iconX, y, effect);
 
-                int color = useEffectColor.get() ? effect.getEffectType().getColor() : nameOrAmpColor.asColor();
+                int color = staticNameColor.get() ? nameOrAmpColor.asColor() : effect.getEffectType().getColor();
 
                 drawString(matrix, getNameAmp(effect), textX, y, color, textShadow.get(), align); // name + amp
                 drawString(matrix, StringHelper.formatTicks(effect.getDuration()), textX, y + 10, durationColor.asColor(), textShadow.get(), align); // dur
@@ -87,7 +87,7 @@ public class EffectHud extends BaseHud {
             int x = 7;
             for (StatusEffectInstance effect : effects) {
                 drawIcon(matrix, x, 2, effect);
-                int color = useEffectColor.get() ? effect.getEffectType().getColor() : nameOrAmpColor.asColor();
+                int color = staticNameColor.get() ? nameOrAmpColor.asColor() : effect.getEffectType().getColor();
                 drawString(matrix, amplifierToString(effect.getAmplifier()), x + 23, 12, color, textShadow.get(), Alignment.RIGHT); // amp
                 drawString(matrix, StringHelper.formatTicks(effect.getDuration()), x + 11, 22, durationColor.asColor(), textShadow.get(), Alignment.CENTER); // dur
                 x += 28;

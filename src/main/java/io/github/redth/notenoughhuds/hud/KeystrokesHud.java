@@ -21,7 +21,7 @@ public class KeystrokesHud extends BaseHud {
     public final NehBoolean showMouseButtons = new NehBoolean("show_mouse_buttons", true);
     public final NehBoolean showCps = new NehBoolean("show_cps", true);
     public final NehBoolean showSpace = new NehBoolean("show_space", true);
-    public final NehInteger fadeTime = new NehInteger("fade_time", 100, 10, 250);
+    public final NehInteger fadeTime = new NehInteger("fade_time", 100, 10, 250, "ms");
     public Key forward;
     public Key left;
     public Key back;
@@ -32,7 +32,7 @@ public class KeystrokesHud extends BaseHud {
 
 
     public KeystrokesHud() {
-        super("keystrokes", Alignment.LEFT, Alignment.CENTER, 0, 0);
+        super("keystrokes");
         options.add(textShadow);
         options.add(backgroundColor);
         options.add(textColor);

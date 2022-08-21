@@ -12,7 +12,7 @@ public class ReachHud extends TextHud {
     private long lastHit = 0L;
 
     public ReachHud() {
-        super("reach", Alignment.LEFT, Alignment.TOP, 2, 2, "%reach% Blocks");
+        super("reach", "%reach% Blocks");
         options.add(precision);
         options.add(noHits);
     }

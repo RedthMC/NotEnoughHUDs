@@ -26,7 +26,7 @@ public class ScoreboardHud extends BaseHud {
     private static List<ScoreboardPlayerScore> scores = Collections.emptyList();
 
     public ScoreboardHud() {
-        super("scoreboard", Alignment.LEFT, Alignment.CENTER, 0, 0);
+        super("scoreboard");
         options.add(textShadow);
         options.add(backgroundColor);
         options.add(showNumbers);

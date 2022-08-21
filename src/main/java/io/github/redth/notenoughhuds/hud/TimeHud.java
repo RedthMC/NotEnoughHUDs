@@ -6,7 +6,7 @@ import java.util.Date;
 public class TimeHud extends TextHud {
 
     public TimeHud() {
-        super("time", Alignment.LEFT, Alignment.TOP, 2, 2, "h:mm a");
+        super("time", "h:mm a");
     }
 
     @Override

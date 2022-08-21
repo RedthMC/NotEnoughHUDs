@@ -55,8 +55,16 @@ public class EditorScreen extends Screen {
 
             dragging.drawPad(matrix, HOVERING_COLOR);
 //            snapper.drawLines(matrix);
-        } else if (hovering != null) hovering.drawPad(matrix, HOVERING_COLOR);
+        } else if (hovering != null) {
+            hovering.drawPad(matrix, HOVERING_COLOR);
+            renderTooltip(matrix, hovering.getTranslated(), mouseX, mouseY);
+        }
+
+
         drawCenteredText(matrix, textRenderer, "NotEnoughHUDs", width / 2, height / 2 - 26, 16777215);
+        drawCenteredText(matrix, textRenderer, "Left Click to Drag", width / 2, height / 2 + 78, 16777215);
+        drawCenteredText(matrix, textRenderer, "Right Click to Open Settings", width / 2, height / 2 + 87, 16777215);
+        drawCenteredText(matrix, textRenderer, "Middle Click to Disable", width / 2, height / 2 + 96, 16777215);
         super.render(matrix, mouseX, mouseY, delta);
     }
 

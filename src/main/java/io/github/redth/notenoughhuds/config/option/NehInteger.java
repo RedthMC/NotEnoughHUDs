@@ -9,15 +9,17 @@ import net.minecraft.util.math.MathHelper;
 public class NehInteger extends NehOption<Integer> {
     public final int min;
     public final int max;
+    public final String unit;
 
     public NehInteger(String id, int defaultValue, int min, int max) {
-        this(id, defaultValue, false, min, max);
+        this(id, defaultValue, min, max, null);
     }
 
-    public NehInteger(String id, int defaultValue, boolean hidden, int min, int max) {
-        super(id, defaultValue, hidden);
+    public NehInteger(String id, int defaultValue, int min, int max, String unit) {
+        super(id, defaultValue);
         this.min = min;
         this.max = max;
+        this.unit = unit;
     }
 
 
@@ -32,7 +34,6 @@ public class NehInteger extends NehOption<Integer> {
     public void set(Integer value) {
         this.value = MathHelper.clamp(value, min, max);
     }
-
 
     @Override
     public Integer e2t(JsonElement element) {

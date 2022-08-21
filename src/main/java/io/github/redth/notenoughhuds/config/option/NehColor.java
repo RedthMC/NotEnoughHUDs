@@ -9,11 +9,7 @@ import org.apache.commons.lang3.StringUtils;
 
 public class NehColor extends NehOption<String> {
     public NehColor(String id, String defaultValue) {
-        this(id, defaultValue, false);
-    }
-
-    public NehColor(String id, String defaultValue, boolean hidden) {
-        super(id, defaultValue, hidden);
+        super(id, defaultValue);
     }
 
     public static String filterValidChars(String text) {

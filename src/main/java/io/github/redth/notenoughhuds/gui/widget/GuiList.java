@@ -20,8 +20,8 @@ public class GuiList<T extends GuiList.GuiListEntry> extends ClickableWidget {
     protected int scrollLength;
     public int length;
 
-    public GuiList(int x, int y, int width, int height, String title) {
-        super(x, y, width, height, Text.of(title));
+    public GuiList(int x, int y, int width, int height) {
+        super(x, y, width, height, Text.empty());
         scrollLength = height;
     }
 
@@ -42,7 +42,7 @@ public class GuiList<T extends GuiList.GuiListEntry> extends ClickableWidget {
     }
 
     protected boolean hoveringScrollBar(double mouseX, double mouseY) {
-        return scrollLength < height && mouseX >= x + width - 4 && mouseY >= scrollY && mouseX < x + width && mouseY < scrollY + scrollLength;
+        return scrollLength < height && mouseX >= x + width - 2 && mouseY >= scrollY && mouseX < x + width && mouseY < scrollY + scrollLength;
     }
 
     @Override
@@ -95,10 +95,16 @@ public class GuiList<T extends GuiList.GuiListEntry> extends ClickableWidget {
 
     public void scrollBy(int wheel) {
         if (scrollLength >= height) return;
-        scrollY = MathHelper.clamp(scrollY - wheel / 10, y, y + height - scrollLength);
+        scrollY = MathHelper.clamp(scrollY - wheel * 5, y, y + height - scrollLength);
         for (T entry : entries) {
             entry.y = entry.initialY - (scrollY - y) * length / height;
         }
+    }
+
+    @Override
+    public boolean mouseScrolled(double mouseX, double mouseY, double amount) {
+        scrollBy((int) amount);
+        return true;
     }
 
     @Override
@@ -106,8 +112,8 @@ public class GuiList<T extends GuiList.GuiListEntry> extends ClickableWidget {
         for (T entry : entries) {
             entry.render(matrix, mouseX, mouseY, delta);
         }
-        drawCenteredTextWithShadow(matrix, mc.textRenderer, getMessage().asOrderedText(), x + width / 2, y + 4, 0xFFFFFF);
-        if (scrollLength < height) fill(matrix, x + width - 4, scrollY, x + width, scrollY + scrollLength, dragging || hoveringScrollBar(mouseX, mouseY) ? 0xFF555555 : 0xFFAAAAAA);
+//        drawCenteredTextWithShadow(matrix, mc.textRenderer, getMessage().asOrderedText(), x + width / 2, y + 4, 0xFFFFFF);
+        if (scrollLength < height) fill(matrix, x + width - 2, scrollY, x + width, scrollY + scrollLength, dragging || hoveringScrollBar(mouseX, mouseY) ? 0xFF555555 : 0xFFAAAAAA);
 
     }
 

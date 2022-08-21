@@ -25,7 +25,7 @@ public class ServerHud extends BaseHud {
     private static boolean loaded;
 
     public ServerHud() {
-        super("server", Alignment.LEFT, Alignment.CENTER, 0, 0);
+        super("server");
         options.add(textShadow);
         options.add(backgroundColor);
         options.add(nameColor);

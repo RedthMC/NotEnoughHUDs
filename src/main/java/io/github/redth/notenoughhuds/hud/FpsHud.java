@@ -5,7 +5,7 @@ import io.github.redth.notenoughhuds.mixin.MinecraftClientAccessor;
 public class FpsHud extends TextHud {
 
     public FpsHud() {
-        super("fps", Alignment.LEFT, Alignment.TOP, 2, 2, "%fps% FPS");
+        super("fps", "%fps% FPS");
     }
 
     @Override

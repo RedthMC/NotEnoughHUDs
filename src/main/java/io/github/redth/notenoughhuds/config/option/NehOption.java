@@ -10,11 +10,15 @@ public abstract class NehOption<T> {
     protected T value;
     protected boolean hidden;
 
-    public NehOption(String id, T defaultValue, boolean hidden) {
+    public NehOption(String id, T defaultValue) {
         this.id = id;
         this.value = defaultValue;
         this.defaultValue = defaultValue;
-        this.hidden = hidden;
+    }
+
+    public NehOption<T> hidden() {
+        this.hidden = true;
+        return this;
     }
 
     public String getId() {

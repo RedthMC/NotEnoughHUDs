@@ -8,11 +8,7 @@ import io.github.redth.notenoughhuds.gui.widget.OptionWidget;
 public class NehBoolean extends NehOption<Boolean> {
 
     public NehBoolean(String id, boolean defaultValue) {
-        super(id, defaultValue, false);
-    }
-
-    public NehBoolean(String id, boolean defaultValue, boolean hidden) {
-        super(id, defaultValue, hidden);
+        super(id, defaultValue);
     }
 
     public boolean toggleValue() {

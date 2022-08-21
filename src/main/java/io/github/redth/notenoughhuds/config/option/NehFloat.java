@@ -11,11 +11,7 @@ public class NehFloat extends NehOption<Float> {
     public final float max;
 
     public NehFloat(String id, float defaultValue, float min, float max) {
-        this(id, defaultValue, false, min, max);
-    }
-
-    public NehFloat(String id, float defaultValue, boolean hidden, float min, float max) {
-        super(id, defaultValue, hidden);
+        super(id, defaultValue);
         this.min = min;
         this.max = max;
     }
