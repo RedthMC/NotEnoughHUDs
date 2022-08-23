@@ -15,7 +15,7 @@
   "environment": "client",
   "entrypoints": {
     "client": [
-      "io.github.redth.notenoughhuds.NotEnoughHUDs"
+      "me.redth.notenoughhuds.NotEnoughHUDs"
     ]
   },
   "mixins": [
