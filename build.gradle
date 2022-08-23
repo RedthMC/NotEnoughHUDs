@@ -14,8 +14,8 @@ apply plugin: 'net.minecraftforge.gradle.forge'
 
 sourceCompatibility = '1.8'
 targetCompatibility = '1.8'
-version = "alpha-1.0"
-group = "io.github.reclqtch.notenoughhuds"
+version = "alpha-1.0.1"
+group = "me.redth.notenoughhuds"
 archivesBaseName = "NotEnoughHUDs"
 
 jar {
