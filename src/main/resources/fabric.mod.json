@@ -1,18 +1,17 @@
 {
   "schemaVersion": 1,
   "id": "notenoughhuds",
-  "version": "alpha-1.0",
+  "version": "alpha-1.0.1",
   "name": "NotEnoughHUDs",
   "description": "Adds a variety of different HUDs to the game.",
   "authors": [
     "Redth"
   ],
   "contact": {
-    "homepage": "https://github.com/Redth/NotEnoughHUDs",
-    "sources": "https://github.com/Redth/NotEnoughHUDs",
-    "issues": "https://github.com/Redth/NotEnoughHUDs/issues"
+    "homepage": "https://github.com/RedthMC/NotEnoughHUDs",
+    "sources": "https://github.com/RedthMC/NotEnoughHUDs",
+    "issues": "https://github.com/RedthMC/NotEnoughHUDs/issues"
   },
-  "license": "MIT",
   "environment": "client",
   "entrypoints": {
     "client": [

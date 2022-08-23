@@ -114,8 +114,8 @@ public class DrawUtils extends DrawableHelper {
     }
 
     public void drawTexture(MatrixStack matrix, Identifier texture, int x, int y, int u, int v, int width, int height) {
+        RenderSystem.setShaderTexture(0, texture);
         resetGl();
-        mc.getTextureManager().bindTexture(texture);
         drawTexture(matrix, x, y, u, v, width, height);
         RenderSystem.disableBlend();
     }

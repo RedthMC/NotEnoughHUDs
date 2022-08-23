@@ -62,7 +62,7 @@ public class CoordsHud extends BaseHud {
 
     @Override
     protected int getWidth() {
-        return IntStream.of(getWidth("X: ", posX), getWidth("Y: ", posY), getWidth("Z: ", posZ), getWidth("Yaw: ", yaw), getWidth("Pitch: ", pitch), getWidth("Biome: ", biome)).max().getAsInt();
+        return IntStream.of(getLineWidth("X: ", posX), getLineWidth("Y: ", posY), getLineWidth("Z: ", posZ), getLineWidth("Yaw: ", yaw), getLineWidth("Pitch: ", pitch), getLineWidth("Biome: ", biome)).max().getAsInt() + 2;
     }
 
     @Override
@@ -104,12 +104,12 @@ public class CoordsHud extends BaseHud {
 
     public int drawLine(MatrixStack matrix, String label, String value, int y) {
         if (value == null) return y;
-        int x1 = drawString(matrix, label, 2, y, labelColor.asColor(), textShadow.get()) - 1;
+        int x1 = drawString(matrix, label, 1, y, labelColor.asColor(), textShadow.get()) - 1;
         drawString(matrix, value, x1, y, valueColor.asColor(), textShadow.get());
         return y + 9;
     }
 
-    public int getWidth(String label, String value) {
+    public int getLineWidth(String label, String value) {
         return value == null ? 0 : mc.textRenderer.getWidth(label + value);
     }
 
