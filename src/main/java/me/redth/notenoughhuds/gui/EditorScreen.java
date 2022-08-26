@@ -35,7 +35,6 @@ public class EditorScreen extends GuiScreen {
         Keyboard.enableRepeatEvents(true);
         buttonList.add(new GuiButtonExt(0, width / 2 - 100, height / 2 + 12, 200, 20, "Settings"));
         buttonList.add(new GuiButtonExt(1, width / 2 - 100, height / 2 + 34, 200, 20, "Back"));
-        buttonList.add(new GuiButtonExt(2, width / 2 - 100, height / 2 + 56, 200, 20, "Reload Config"));
     }
 
     @Override
@@ -46,9 +45,6 @@ public class EditorScreen extends GuiScreen {
                 break;
             case 1:
                 mc.displayGuiScreen(parent);
-                break;
-            case 2:
-                neh.config.load();
                 break;
         }
     }

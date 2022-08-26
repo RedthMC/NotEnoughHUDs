@@ -19,7 +19,6 @@ public class IntegerWidget extends OptionWidget {
         thumbOffset = getThumbOffset();
     }
 
-
     public int getIntValue() {
         return thumbOffset * range / editBox.getWidth() + option.min;
     }
@@ -62,8 +61,7 @@ public class IntegerWidget extends OptionWidget {
         thumbOffset = getThumbOffset();
         int x1 = editBox.getX();
         int y1 = editBox.getY() + editBox.getHeight() / 2;
-        String label = String.valueOf(value);
-        if (option.unit != null) label += " " + option.unit;
+        String label = option.formatted();
         mc.fontRendererObj.drawStringWithShadow(label, x1 - mc.fontRendererObj.getStringWidth(label) - 4, y1 - 4, 0xFFFFFF);
         drawRect(x1, y1 - 2, x1 + editBox.getWidth(), y1 + 2, 0xFFFFFFFF);
         int thumbX = x1 + thumbOffset;

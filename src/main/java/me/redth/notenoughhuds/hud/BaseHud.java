@@ -3,7 +3,6 @@ package me.redth.notenoughhuds.hud;
 import me.redth.notenoughhuds.NotEnoughHUDs;
 import me.redth.notenoughhuds.config.option.NehColor;
 import me.redth.notenoughhuds.config.option.NehEnum;
-import me.redth.notenoughhuds.config.option.NehFloat;
 import me.redth.notenoughhuds.config.option.NehInteger;
 import me.redth.notenoughhuds.config.option.NehOption;
 import me.redth.notenoughhuds.gui.EditorScreen;
@@ -27,7 +26,7 @@ public abstract class BaseHud extends DrawUtils {
     public final NehEnum verAlign = new NehEnum("vertical_alignment", Alignment.TOP);
     public final NehInteger xOffset = new NehInteger("x_offset", 0, -32767, 32767);
     public final NehInteger yOffset = new NehInteger("y_offset", 60, -32767, 32767);
-    public final NehFloat scale = new NehFloat("scale", 1.0F, 0.5F, 2.0F);
+    public final NehInteger scale = new NehInteger("scale", 100, 50, 200, i -> i + "%");
     private int x;
     private int y;
     protected int width;
@@ -66,11 +65,15 @@ public abstract class BaseHud extends DrawUtils {
         options.add(scale);
     }
 
+    public float scaled() {
+        return scale.get() / 100.0F;
+    }
+
     public void tick() {
         width = getWidth();
         height = getHeight();
-        scaledWidth = (int) (width * scale.get());
-        scaledHeight = (int) (height * scale.get());
+        scaledWidth = (int) (width * scaled());
+        scaledHeight = (int) (height * scaled());
 
         x = xOffset.get();
         if (horAlign.get() == Alignment.CENTER) x += (screenWidth - scaledWidth) / 2;
@@ -105,7 +108,7 @@ public abstract class BaseHud extends DrawUtils {
         }
         GlStateManager.pushMatrix();
         GlStateManager.translate(x1, y1, 0.0F);
-        GlStateManager.scale(scale.get(), scale.get(), 1.0F);
+        GlStateManager.scale(scaled(), scaled(), 1.0F);
         render();
         GlStateManager.popMatrix();
     }

@@ -15,11 +15,13 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class SettingsScreen extends GuiScreen {
     private static final NotEnoughHUDs neh = NotEnoughHUDs.getInstance();
     private final GuiScreen parent;
     public BaseHud current;
+    public ArrayList<OptionWidget> settings = new ArrayList<>();
     public GuiList<HudButton> hudList;
 //    public GuiList<OptionWidget> settings;
 
@@ -51,14 +53,17 @@ public class SettingsScreen extends GuiScreen {
     }
 
     public void loadSettings() {
-        buttonList.removeIf(button -> button instanceof OptionWidget);
-
+        for (OptionWidget setting : settings) {
+            buttonList.remove(setting);
+        }
+        settings.clear();
         int x = width / 2 - 128;
         int y = height / 2;
         for (NehOption<?> option : current.options) {
             if (option.isHidden()) continue;
             OptionWidget settingWidget = option.getOptionWidget(x, y);
             buttonList.add(settingWidget);
+            settings.add(settingWidget);
             y += 16;
         }
 //        settings.clearEntries();
@@ -105,10 +110,10 @@ public class SettingsScreen extends GuiScreen {
 
     @Override
     protected void keyTyped(char typedChar, int keyCode) throws IOException {
+        for (OptionWidget option : settings) {
+            option.keyTyped(typedChar, keyCode);
+        }
         super.keyTyped(typedChar, keyCode);
-//        for (OptionWidget option : settings.getEntries()) {
-//            option.keyTyped(typedChar, keyCode);
-//        }
     }
 
     @Override
@@ -149,8 +154,8 @@ public class SettingsScreen extends GuiScreen {
                     y1 += 9;
                 }
 
-                drawRect(xPosition + width - 16, yPosition + height - 16, xPosition + width, yPosition + height, 0xFF5555FF);
-                drawCenteredString(mc.fontRendererObj, "...", xPosition + width - 8, yPosition + height - 8 - mc.fontRendererObj.FONT_HEIGHT / 2, 0xFFFFFF);
+                drawRect(xPosition + width - 16, yPosition, xPosition + width, yPosition + height, 0xFF5555FF);
+                drawCenteredString(mc.fontRendererObj, "\u22ee", xPosition + width - 8, yPosition + height / 2 - 4, 0xFFFFFF);
                 DrawUtils.drawOutline(xPosition, yPosition, xPosition + width, yPosition + height, hud.isEnabled() ? 0xFF55FF55 : 0xFFFF5555);
             }
         }
@@ -158,7 +163,7 @@ public class SettingsScreen extends GuiScreen {
         @Override
         public boolean mousePressed(Minecraft mc, int mouseX, int mouseY) {
             if (super.mousePressed(mc, mouseX, mouseY)) {
-                if (mouseX >= xPosition + width - 16 && mouseY >= yPosition + height - 16 && mouseX < xPosition + width && mouseY < yPosition + height) {
+                if (mouseX >= xPosition + width - 16) {
                     current = hud;
                     loadSettings();
                 } else {

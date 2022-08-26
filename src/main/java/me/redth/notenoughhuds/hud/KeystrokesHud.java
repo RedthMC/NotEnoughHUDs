@@ -4,7 +4,6 @@ import me.redth.notenoughhuds.config.option.NehBoolean;
 import me.redth.notenoughhuds.config.option.NehColor;
 import me.redth.notenoughhuds.config.option.NehInteger;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.util.MathHelper;
 import org.lwjgl.input.Keyboard;
@@ -19,7 +18,7 @@ public class KeystrokesHud extends BaseHud {
     public final NehBoolean showMouseButtons = new NehBoolean("show_mouse_buttons", true);
     public final NehBoolean showCps = new NehBoolean("show_cps", true);
     public final NehBoolean showSpace = new NehBoolean("show_space", true);
-    public final NehInteger fadeTime = new NehInteger("fade_time", 100, 10, 250);
+    public final NehInteger fadeTime = new NehInteger("fade_time", 100, 10, 250, i -> i + " ms");
     public final Key forward;
     public final Key left;
     public final Key back;
@@ -137,15 +136,8 @@ public class KeystrokesHud extends BaseHud {
 
             drawRect(x, y, x + width, y + height, getFadedColor(backgroundColor.asInt(), pressedBackgroundColor.asInt(), percent));
             int tc = getFadedColor(textColor.asInt(), pressedTextColor.asInt(), percent);
-            int i = 4;
-            if (cps >= 0 && showCps.get()) {
-                GlStateManager.pushMatrix();
-                GlStateManager.scale(0.5F, 0.5F, 1.0F);
-                drawString(cps + " CPS", x * 2 + width - 0.5f, y * 2 + height + 6, tc, textShadow.get(), Alignment.CENTER);
-                GlStateManager.popMatrix();
-                i = 6;
-            }
-            drawString(getName(), x + width / 2.0f, y + height / 2.0f - i, tc, textShadow.get(), Alignment.CENTER);
+            String s = showCps.get() && cps > 0 ? String.valueOf(cps) : getName();
+            drawString(s, x + width / 2.0F, y + height / 2.0F - 4.0F, tc, textShadow.get(), Alignment.CENTER);
         }
 
         public String getName() {

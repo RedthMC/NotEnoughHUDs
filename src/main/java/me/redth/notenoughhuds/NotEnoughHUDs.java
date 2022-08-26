@@ -1,17 +1,17 @@
 package me.redth.notenoughhuds;
 
+import me.redth.notenoughhuds.config.NehCommand;
 import me.redth.notenoughhuds.config.NehConfig;
 import me.redth.notenoughhuds.gui.EditorScreen;
 import me.redth.notenoughhuds.hud.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.settings.KeyBinding;
+import net.minecraftforge.client.ClientCommandHandler;
 import net.minecraftforge.client.event.MouseEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
-import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -22,7 +22,7 @@ import net.minecraftforge.fml.common.gameevent.TickEvent;
 public class NotEnoughHUDs {
     public static final Minecraft mc = Minecraft.getMinecraft();
     private static NotEnoughHUDs instance;
-    public KeyBinding guiKey;
+    public boolean showScreen;
     public HudManager hudManager;
     public NehConfig config;
     public ComboHud comboHud;
@@ -44,7 +44,7 @@ public class NotEnoughHUDs {
     @Mod.EventHandler
     public void init(FMLInitializationEvent e) {
         MinecraftForge.EVENT_BUS.register(this);
-        ClientRegistry.registerKeyBinding(guiKey = new KeyBinding("key.notenoughhuds.open_editor", 0x36, "key.category.misc")); // rshift
+        ClientCommandHandler.instance.registerCommand(new NehCommand());
 
         config = new NehConfig();
         hudManager = new HudManager();
@@ -92,8 +92,9 @@ public class NotEnoughHUDs {
     @SubscribeEvent
     public void onClientTick(TickEvent.ClientTickEvent e) {
         if (e.phase == TickEvent.Phase.START) {
-            if (guiKey.isPressed()) {
+            if (showScreen) {
                 mc.displayGuiScreen(new EditorScreen(mc.currentScreen));
+                showScreen = false;
             }
         } else if (mc.theWorld != null || BaseHud.isEditing()) for (BaseHud hud : hudManager.getEnabledHuds()) {
             hud.tick();

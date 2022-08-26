@@ -5,7 +5,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 
 public class ComboHud extends TextHud {
-    public final NehInteger expire = new NehInteger("expire", 2, 1, 10, "ms");
+    public final NehInteger expire = new NehInteger("expire", 2, 1, 10, i -> i + " ms");
     private static int combo;
     private long lastHit;
 

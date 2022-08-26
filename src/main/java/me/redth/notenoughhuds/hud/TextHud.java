@@ -24,7 +24,7 @@ public class TextHud extends BaseHud {
         options.add(bgWidth);
         options.add(bgHeight);
         options.add(textColor);
-        options.add(this.format = new NehString("format", defaultFormat));
+        options.add(format = new NehString("format", defaultFormat));
     }
 
     public TextHud() {
