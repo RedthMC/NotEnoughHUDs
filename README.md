@@ -1,6 +1,7 @@
 # NotEnoughHUDs
 
 `/notenoughhuds` or `/neh` to open HUD editor
+`/neh reload` to reload config
 
 ### Available HUDs
 
