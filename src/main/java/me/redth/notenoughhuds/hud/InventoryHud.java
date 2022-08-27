@@ -13,7 +13,7 @@ public class InventoryHud extends ItemHud {
     private List<ItemStack> inventory = null;
 
     public InventoryHud() {
-        super("inventory", Alignment.LEFT, Alignment.CENTER, 0, 0);
+        super("inventory");
         options.add(showBackground);
     }
 

@@ -6,22 +6,26 @@ import me.redth.notenoughhuds.gui.widget.IntegerWidget;
 import me.redth.notenoughhuds.gui.widget.OptionWidget;
 import net.minecraft.util.math.MathHelper;
 
+import java.util.function.Function;
+
 public class NehInteger extends NehOption<Integer> {
     public final int min;
     public final int max;
-    public final String unit;
-
+    private final Function<Integer, String> formatter;
     public NehInteger(String id, int defaultValue, int min, int max) {
-        this(id, defaultValue, min, max, null);
+        this(id, defaultValue, min, max, String::valueOf);
     }
 
-    public NehInteger(String id, int defaultValue, int min, int max, String unit) {
+    public NehInteger(String id, int defaultValue, int min, int max, Function<Integer, String> formatter) {
         super(id, defaultValue);
         this.min = min;
         this.max = max;
-        this.unit = unit;
+        this.formatter = formatter;
     }
 
+    public String formatted() {
+        return formatter.apply(value);
+    }
 
     public void set(String value) {
         try {

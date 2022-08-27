@@ -21,7 +21,7 @@ public class KeystrokesHud extends BaseHud {
     public final NehBoolean showMouseButtons = new NehBoolean("show_mouse_buttons", true);
     public final NehBoolean showCps = new NehBoolean("show_cps", true);
     public final NehBoolean showSpace = new NehBoolean("show_space", true);
-    public final NehInteger fadeTime = new NehInteger("fade_time", 100, 10, 250, "ms");
+    public final NehInteger fadeTime = new NehInteger("fade_time", 100, 10, 250, i -> i + " ms");
     public Key forward;
     public Key left;
     public Key back;
@@ -138,15 +138,8 @@ public class KeystrokesHud extends BaseHud {
 
             fill(matrix, x, y, x + width, y + height, getFadedColor(backgroundColor.asColor(), pressedBackgroundColor.asColor(), percent));
             int tc = getFadedColor(textColor.asColor(), pressedTextColor.asColor(), percent);
-            int i = 4;
-            if (cps >= 0 && showCps.get()) {
-                matrix.push();
-                matrix.scale(0.5F, 0.5F, 1.0F);
-                drawString(matrix, cps + " CPS", x * 2 + width - .5f, y * 2 + height + 6, tc, textShadow.get(), Alignment.CENTER);
-                matrix.pop();
-                i = 6;
-            }
-            drawString(matrix, getName(), x + width / 2, y + height / 2 - i, tc, textShadow.get(), Alignment.CENTER);
+            String s = showCps.get() && cps > 0 ? String.valueOf(cps) : getName();
+            drawString(matrix, s, x + width / 2.0F, y + height / 2.0F - 4, tc, textShadow.get(), Alignment.CENTER);
         }
 
         public String getName() {

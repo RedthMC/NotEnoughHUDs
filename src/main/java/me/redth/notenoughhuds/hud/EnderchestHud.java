@@ -11,7 +11,7 @@ public class EnderchestHud extends ItemHud {
     private EnderChestInventory enderchest = null;
 
     public EnderchestHud() {
-        super("enderchest", Alignment.LEFT, Alignment.CENTER, 0, 0);
+        super("ender_chest");
         options.add(showBackground);
     }
 

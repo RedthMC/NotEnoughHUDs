@@ -6,7 +6,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.Util;
 
 public class ComboHud extends TextHud {
-    public final NehInteger expire = new NehInteger("expire", 2, 1, 10);
+    public final NehInteger expire = new NehInteger("expire", 2, 1, 10, i -> i + " ms");
     private static int combo;
     private long lastHit;
 

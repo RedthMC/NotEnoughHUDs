@@ -1,25 +1,24 @@
 package me.redth.notenoughhuds;
 
+import me.redth.notenoughhuds.config.NehCommand;
 import me.redth.notenoughhuds.config.NehConfig;
 import me.redth.notenoughhuds.gui.EditorScreen;
 import me.redth.notenoughhuds.hud.*;
 import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
-import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
 import net.fabricmc.fabric.api.event.player.AttackEntityCallback;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.GenericContainerScreen;
-import net.minecraft.client.option.KeyBinding;
-import net.minecraft.client.util.InputUtil;
 import net.minecraft.inventory.EnderChestInventory;
 import net.minecraft.util.ActionResult;
 
 public class NotEnoughHUDs implements ClientModInitializer {
     public static final MinecraftClient mc = MinecraftClient.getInstance();
     private static NotEnoughHUDs instance;
-    public KeyBinding guiKey;
+    public boolean showMenu;
     public HudManager hudManager;
     public NehConfig config;
     public ComboHud comboHud;
@@ -43,9 +42,6 @@ public class NotEnoughHUDs implements ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
-
-        guiKey = KeyBindingHelper.registerKeyBinding(new KeyBinding("key.notenoughhuds.open_editor", InputUtil.GLFW_KEY_RIGHT_SHIFT, "key.category.misc"));
-
         config = new NehConfig();
         hudManager = new HudManager();
         hudManager.register(new ArmorHud());
@@ -57,7 +53,7 @@ public class NotEnoughHUDs implements ClientModInitializer {
         hudManager.register(new InventoryHud());
         hudManager.register(effectHud = new EffectHud());
         hudManager.register(new FpsHud());
-        hudManager.register(keystrokesHud= new KeystrokesHud());
+        hudManager.register(keystrokesHud = new KeystrokesHud());
         hudManager.register(new PackHud());
         hudManager.register(pingHud = new PingHud());
         hudManager.register(reachHud = new ReachHud());
@@ -78,11 +74,16 @@ public class NotEnoughHUDs implements ClientModInitializer {
                 hud.renderScaled(matrix);
             }
         }));
+
+        ClientCommandRegistrationCallback.EVENT.register(NehCommand::register);
+
         ClientTickEvents.START_CLIENT_TICK.register(c -> {
-            if (guiKey.isPressed()) {
+            if (showMenu) {
                 c.setScreenAndRender(new EditorScreen(c.currentScreen));
+                showMenu = false;
             }
         });
+
         ClientTickEvents.END_CLIENT_TICK.register(c -> {
             if (MinecraftClient.isHudEnabled() || BaseHud.isEditing()) for (BaseHud hud : hudManager.getEnabledHuds()) {
                 hud.tick();

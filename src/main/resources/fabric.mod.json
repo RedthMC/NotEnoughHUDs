@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "notenoughhuds",
-  "version": "alpha-1.0.1",
+  "version": "alpha-1.0.2",
   "name": "NotEnoughHUDs",
   "description": "Adds a variety of different HUDs to the game.",
   "authors": [

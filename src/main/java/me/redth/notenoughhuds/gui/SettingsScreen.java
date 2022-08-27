@@ -158,14 +158,14 @@ public class SettingsScreen extends Screen {
             }
 
 //            drawTextWithShadow(matrix, textRenderer, getMessage(), x + 28, y + 4, 0xFFFFFF);
-            fill(matrix, x + width - 16, y + height - 16, x + width, y + height, 0xFF5555FF);
-            drawCenteredText(matrix, textRenderer, "...", x + width - 8, y + height - 12, 0xFFFFFF);
+            fill(matrix, x + width - 16, y, x + width, y + height, 0xFF5555FF);
+            drawCenteredText(matrix, textRenderer, "\u22ee", x + width - 8, y + height / 2 - 4, 0xFFFFFF);
             DrawUtils.drawOutline(matrix, x, y, x + width, y + height, hud.isEnabled() ? 0xFF55FF55 : 0xFFFF5555);
         }
 
         @Override
         public void onClick(double mouseX, double mouseY) {
-            if (mouseX >= x + width - 16 && mouseY >= y + height - 16 && mouseX < x + width && mouseY < y + height) {
+            if (mouseX >= x + width - 16) {
                 current = hud;
                 loadSettings();
             } else {

@@ -30,7 +30,7 @@ public class ArmorHud extends ItemHud {
     private List<ItemStack> items = Collections.emptyList();
 
     public ArmorHud() {
-        super("armor", Alignment.LEFT, Alignment.CENTER, 0, 0);
+        super("armor");
         options.add(textShadow);
         options.add(backgroundColor);
         options.add(durColor);

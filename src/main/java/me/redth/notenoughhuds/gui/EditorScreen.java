@@ -29,7 +29,6 @@ public class EditorScreen extends Screen {
         client.keyboard.setRepeatEvents(true);
         addDrawableChild(new FlatButton(width / 2 - 100, height / 2 + 12, 200, 20, "settings", b -> client.setScreenAndRender(new SettingsScreen(this))));
         addDrawableChild(new FlatButton(width / 2 - 100, height / 2 + 34, 200, 20, "back", b -> client.setScreenAndRender(parent)));
-        addDrawableChild(new FlatButton(width / 2 - 100, height / 2 + 56, 200, 20, "reload_config", b -> neh.config.load()));
     }
 
     @Override

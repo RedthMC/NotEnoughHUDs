@@ -9,7 +9,7 @@ public abstract class ItemHud extends BaseHud {
     private float x1;
     private float y1;
 
-    public ItemHud(String id, Alignment defaultHorAlign, Alignment defaultVerAlign, int defaultXOffset, int defaultYOffset) {
+    public ItemHud(String id) {
         super(id);
     }
 
@@ -22,7 +22,7 @@ public abstract class ItemHud extends BaseHud {
         }
         matrix.push();
         matrix.translate(x, y, 0.0F);
-        matrix.scale(scale.get(), scale.get(), 1.0F);
+        matrix.scale(scaled(), scaled(), 1.0F);
         x1 = x;
         y1 = y;
         render(matrix);
@@ -33,7 +33,7 @@ public abstract class ItemHud extends BaseHud {
         MatrixStack matrix = RenderSystem.getModelViewStack();
         matrix.push();
         matrix.translate(x1, y1, 0.0F);
-        matrix.scale(scale.get(), scale.get(), 1.0F);
+        matrix.scale(scaled(), scaled(), 1.0F);
         matrix.translate(0.0D, 0.0D, 32.0D);
         RenderSystem.applyModelViewMatrix();
     }
