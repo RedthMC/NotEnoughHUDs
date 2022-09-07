@@ -2,8 +2,8 @@ package me.redth.notenoughhuds.gui;
 
 import com.google.common.collect.ImmutableList;
 import me.redth.notenoughhuds.NotEnoughHUDs;
+import me.redth.notenoughhuds.gui.widget.HudMenu;
 import me.redth.notenoughhuds.hud.BaseHud;
-import me.redth.notenoughhuds.utils.DrawUtils;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
@@ -76,7 +76,6 @@ public class EditorScreen extends GuiScreen {
         drawCenteredString(fontRendererObj, "NotEnoughHUDs", width / 2, height / 2 - 26, 16777215);
         drawCenteredString(fontRendererObj, "Left Click to Drag", width / 2, height / 2 + 78, 16777215);
         drawCenteredString(fontRendererObj, "Right Click to Open Settings", width / 2, height / 2 + 87, 16777215);
-        drawCenteredString(fontRendererObj, "Middle Click to Disable", width / 2, height / 2 + 96, 16777215);
         super.drawScreen(mouseX, mouseY, delta);
     }
 
@@ -92,12 +91,17 @@ public class EditorScreen extends GuiScreen {
 //                    updateSnaps(mouseX, mouseY);
                     break;
                 case 1:
-                    mc.displayGuiScreen(new SettingsScreen(this, hovering));
-                    hovering = null;
-                    break;
-                case 2:
-                    hovering.setEnabled(false);
-                    hovering = null;
+                    buttonList.add(new HudMenu(hovering, mouseX, mouseY).add("Settings", hud -> {
+
+                        mc.displayGuiScreen(new SettingsScreen(this, hud));
+                        hovering = null;
+
+                    }).add("Disable", hud -> {
+
+                        hud.setEnabled(false);
+                        hovering = null;
+
+                    }));
                     break;
             }
             mc.getSoundHandler().playSound(PositionedSoundRecord.create(new ResourceLocation("gui.button.press"), 1.0F));

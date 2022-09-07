@@ -12,12 +12,12 @@ public class NehString extends NehOption<String> {
     }
 
     @Override
-    public String e2t(JsonElement element) {
+    public String read(JsonElement element) {
         return element.getAsString();
     }
 
     @Override
-    public JsonElement t2e(String element) {
+    public JsonElement write(String element) {
         return new JsonPrimitive(element);
     }
 
