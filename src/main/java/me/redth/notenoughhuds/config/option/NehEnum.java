@@ -12,12 +12,12 @@ public class NehEnum extends NehOption<NehEnum.EnumType> {
     }
 
     @Override
-    public EnumType read(JsonElement element) {
+    public EnumType e2t(JsonElement element) {
         return defaultValue.enumOf(element.getAsString());
     }
 
     @Override
-    public JsonElement write(EnumType element) {
+    public JsonElement t2e(EnumType element) {
         return new JsonPrimitive(element.name());
     }
 

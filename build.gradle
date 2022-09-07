@@ -14,7 +14,7 @@ apply plugin: 'net.minecraftforge.gradle.forge'
 
 sourceCompatibility = '1.8'
 targetCompatibility = '1.8'
-version = "alpha-1.0.3"
+version = "alpha-1.0.2"
 group = "me.redth.notenoughhuds"
 archivesBaseName = "NotEnoughHUDs"
 
@@ -22,7 +22,7 @@ jar {
     manifest.attributes([
             "ModSide"                    : "CLIENT",
             "FMLCorePluginContainsFMLMod": "true",
-            "FMLCorePlugin"              : "me.redth.notenoughhuds.transformer.NehPlugin"
+            "FMLCorePlugin"              : "io.github.reclqtch.notenoughhuds.transformer.NehPlugin"
     ])
 }
 minecraft {

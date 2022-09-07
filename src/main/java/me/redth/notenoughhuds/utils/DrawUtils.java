@@ -11,26 +11,10 @@ import net.minecraft.util.ResourceLocation;
 import org.lwjgl.util.Rectangle;
 
 public class DrawUtils extends Gui {
-    public static final ResourceLocation TRANSPARENT = new ResourceLocation("notenoughhuds", "textures/transparent.png");
     public static final Minecraft mc = Minecraft.getMinecraft();
-
-    public static void drawTransparentBackground(int x, int y, int w, int h) {
-        resetGl();
-        mc.getTextureManager().bindTexture(TRANSPARENT);
-        drawModalRectWithCustomSizedTexture(x, y, 0, 0, w, h, 8, 8);
-        GlStateManager.disableBlend();
-    }
-
-    public static void drawTransparentBackground(Rectangle rect) {
-        drawTransparentBackground(rect.getX(), rect.getY(), rect.getWidth(), rect.getHeight());
-    }
 
     public static void drawRect(Rectangle rect, int color) {
         drawRect(rect.getX(), rect.getY(), rect.getX() + rect.getWidth(), rect.getY() + rect.getHeight(), color);
-    }
-
-    public static void drawOutline(Rectangle rect, int color) {
-        drawOutline(rect.getX(), rect.getY(), rect.getX() + rect.getWidth(), rect.getY() + rect.getHeight(), color);
     }
 
     public static void drawRect(float left, float top, float right, float bottom, int color) {
@@ -66,48 +50,6 @@ public class DrawUtils extends Gui {
         tessellator.draw();
         GlStateManager.enableTexture2D();
         GlStateManager.disableBlend();
-    }
-
-    public static void drawGradient(Rectangle rect, int colorTL, int colorTR, int colorBL, int colorBR) {
-        drawGradient(rect.getX(), rect.getY(), rect.getX() + rect.getWidth(), rect.getY() + rect.getHeight(), colorTL, colorTR, colorBL, colorBR);
-    }
-
-    public static void drawGradient(float left, float top, float right, float bottom, int colorTL, int colorTR, int colorBL, int colorBR) {
-        if (left < right) {
-            float f = left;
-            left = right;
-            right = f;
-        }
-
-        if (top < bottom) {
-            float f = top;
-            top = bottom;
-            bottom = f;
-        }
-
-        Tessellator tessellator = Tessellator.getInstance();
-        WorldRenderer worldrenderer = tessellator.getWorldRenderer();
-        GlStateManager.disableTexture2D();
-        GlStateManager.enableBlend();
-        GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
-        GlStateManager.shadeModel(7425);
-        worldrenderer.begin(7, DefaultVertexFormats.POSITION_COLOR);
-        WRPCE(worldrenderer, left, bottom, colorBL);
-        WRPCE(worldrenderer, right, bottom, colorBR);
-        WRPCE(worldrenderer, right, top, colorTR);
-        WRPCE(worldrenderer, left, top, colorTL);
-        tessellator.draw();
-        GlStateManager.shadeModel(7424);
-        GlStateManager.disableBlend();
-        GlStateManager.enableTexture2D();
-    }
-
-    protected static void WRPCE(WorldRenderer wr, double x, double y, int color) {
-        float a = (color >> 24 & 255) / 255.0F;
-        float r = (color >> 16 & 255) / 255.0F;
-        float g = (color >> 8 & 255) / 255.0F;
-        float b = (color & 255) / 255.0F;
-        wr.pos(x, y, 0.0d).color(r, g, b, a).endVertex();
     }
 
     public static void drawHorizontalLine(float x1, float x2, float y, int color) {
@@ -172,5 +114,4 @@ public class DrawUtils extends Gui {
         GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
         GlStateManager.blendFunc(770, 771);
     }
-
 }

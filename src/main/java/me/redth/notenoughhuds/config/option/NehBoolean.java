@@ -17,12 +17,12 @@ public class NehBoolean extends NehOption<Boolean> {
     }
 
     @Override
-    public Boolean read(JsonElement element) {
+    public Boolean e2t(JsonElement element) {
         return element.getAsBoolean();
     }
 
     @Override
-    public JsonElement write(Boolean element) {
+    public JsonElement t2e(Boolean element) {
         return new JsonPrimitive(element);
     }
 

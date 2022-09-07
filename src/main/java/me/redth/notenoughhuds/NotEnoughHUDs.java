@@ -18,7 +18,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.InputEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 
-@Mod(modid = "notenoughhuds", clientSideOnly = true)
+@Mod(modid = "notenoughhuds", version = "1.0", clientSideOnly = true)
 public class NotEnoughHUDs {
     public static final Minecraft mc = Minecraft.getMinecraft();
     private static NotEnoughHUDs instance;
@@ -129,5 +129,5 @@ public class NotEnoughHUDs {
         instance.tpsHud.onTimeUpdate();
     }
 
-    //todo: condition, color picker
+    //todo: condition
 }
