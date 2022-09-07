@@ -398,25 +398,25 @@ public abstract class TextWidget extends OptionWidget {
     }
 
     public void highlight(int x1, int y1, int x2, int y2) {
-        if (x1 < x2) {
-            int i = x1;
-            x1 = x2;
-            x2 = i;
-        }
-
-        if (y1 < y2) {
-            int j = y1;
-            y1 = y2;
-            y2 = j;
-        }
-        int k = editBox.getX() + editBox.getWidth();
-        if (x2 > k) {
-            x2 = k;
-        }
-
-        if (x1 > k) {
-            x1 = k;
-        }
+//        if (x1 < x2) {
+//            int i = x1;
+//            x1 = x2;
+//            x2 = i;
+//        }
+//
+//        if (y1 < y2) {
+//            int j = y1;
+//            y1 = y2;
+//            y2 = j;
+//        }
+//        int k = editBox.getX() + editBox.getWidth();
+//        if (x2 > k) {
+//            x2 = k;
+//        }
+//
+//        if (x1 > k) {
+//            x1 = k;
+//        }
 
         Tessellator tessellator = Tessellator.getInstance();
         WorldRenderer worldrenderer = tessellator.getWorldRenderer();

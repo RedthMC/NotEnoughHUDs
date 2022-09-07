@@ -128,6 +128,7 @@ public class SettingsScreen extends GuiScreen {
 //        }
     }
 
+
     public final class HudButton extends GuiList.GuiListEntry {
         public final BaseHud hud;
 
@@ -142,7 +143,7 @@ public class SettingsScreen extends GuiScreen {
                 hovered = mouseX >= xPosition && mouseY >= yPosition && mouseX < xPosition + width && mouseY < yPosition + height;
                 mouseDragged(mc, mouseX, mouseY);
 
-                drawRect(xPosition, yPosition, xPosition + width, yPosition + height, hovered ? 0x80555555 : 0x80000000); // bg
+                if (hovered) drawRect(xPosition, yPosition, xPosition + width, yPosition + height, 0x2FFFFFFF); // bg
 
                 DrawUtils.resetGl();
                 mc.getTextureManager().bindTexture(hud.icon);
