@@ -104,6 +104,6 @@ public class NotEnoughHUDs implements ClientModInitializer {
         if (instance.tpsHud.isEnabled()) instance.tpsHud.onTimeUpdate();
     }
 
-    // todo: cps, server, idk, items
+    // todo: cps, server, color picker, ec
 
 }

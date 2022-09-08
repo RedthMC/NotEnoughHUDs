@@ -46,16 +46,16 @@ public abstract class NehOption<T> {
     }
 
     public void set(JsonElement jsonElement) {
-        set(e2t(jsonElement));
+        set(read(jsonElement));
     }
 
     public void addToJson(JsonObject json) {
-        json.add(id, t2e(value));
+        json.add(id, write(value));
     }
 
-    public abstract T e2t(JsonElement element);
+    public abstract T read(JsonElement element);
 
-    public abstract JsonElement t2e(T element);
+    public abstract JsonElement write(T element);
 
     public abstract OptionWidget getOptionWidget(int x, int y);
 

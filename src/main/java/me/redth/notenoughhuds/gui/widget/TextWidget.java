@@ -109,9 +109,10 @@ public abstract class TextWidget extends OptionWidget {
     }
 
     @Override
-    public void onEditClick(int mouseX, int mouseY) {
-        if (editBox.contains(mouseX, mouseY)) {
-            int i = mouseX - editBox.getX();
+    public void onClick(double mouseX, double mouseY) {
+        if (editBox.contains((int) mouseX, (int) mouseY)) {
+            setFocused(true);
+            int i = (int) mouseX - editBox.getX();
             String string = tr.trimToWidth(text.substring(firstCharIndex), editBox.getWidth());
             setCursor(tr.trimToWidth(string, i).length() + firstCharIndex);
         }
@@ -373,26 +374,26 @@ public abstract class TextWidget extends OptionWidget {
     }
 
     protected void drawSelectionHighlight(int x1, int y1, int x2, int y2) {
-        int i;
-        if (x1 < x2) {
-            i = x1;
-            x1 = x2;
-            x2 = i;
-        }
+        // int i;
+        // if (x1 < x2) {
+        //     i = x1;
+        //     x1 = x2;
+        //     x2 = i;
+        // }
 
-        if (y1 < y2) {
-            i = y1;
-            y1 = y2;
-            y2 = i;
-        }
+        // if (y1 < y2) {
+        //     i = y1;
+        //     y1 = y2;
+        //     y2 = i;
+        // }
 
-        if (x2 > editBox.getX() + editBox.getWidth()) {
-            x2 = editBox.getX() + editBox.getWidth();
-        }
+        // if (x2 > editBox.getX() + editBox.getWidth()) {
+        //     x2 = editBox.getX() + editBox.getWidth();
+        // }
 
-        if (x1 > editBox.getX() + editBox.getWidth()) {
-            x1 = editBox.getX() + editBox.getWidth();
-        }
+        // if (x1 > editBox.getX() + editBox.getWidth()) {
+        //     x1 = editBox.getX() + editBox.getWidth();
+        // }
 
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder bufferBuilder = tessellator.getBuffer();

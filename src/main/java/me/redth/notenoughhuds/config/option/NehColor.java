@@ -7,7 +7,11 @@ import net.minecraft.util.Util;
 import net.minecraft.util.math.MathHelper;
 import org.apache.commons.lang3.StringUtils;
 
+import java.awt.*;
+
 public class NehColor extends NehOption<String> {
+    public boolean chroma;
+
     public NehColor(String id, String defaultValue) {
         super(id, defaultValue);
     }
@@ -34,14 +38,31 @@ public class NehColor extends NehOption<String> {
         this.value = value;
     }
 
-    @Override
-    public String e2t(JsonElement element) {
-        return element.getAsString();
+    public void set(int value) {
+        String s = Long.toString(value & 0xFFFFFFFFL, 16);
+        set(StringUtils.leftPad(s, 8, '0'));
     }
 
     @Override
-    public JsonElement t2e(String element) {
+    public String read(JsonElement element) {
+        String s = element.getAsString();
+        if (s.startsWith("*")) {
+            chroma = true;
+            s = s.substring(1);
+        }
+        return s;
+    }
+
+    @Override
+    public JsonElement write(String element) {
+        if (chroma) element = "*" + element;
         return new JsonPrimitive(element);
+    }
+
+    @Override
+    public void reset() {
+        super.reset();
+        chroma = false;
     }
 
     @Override
@@ -50,6 +71,7 @@ public class NehColor extends NehOption<String> {
     }
 
     public int asColor() {
+        if (chroma) return getChroma(0, 0);
         return asColor(value);
     }
 
@@ -61,7 +83,11 @@ public class NehColor extends NehOption<String> {
         }
     }
 
-    public static int getChroma(float offset) {
-        return MathHelper.hsvToRgb((Util.getMeasuringTimeMs() + offset) % 1000.0F / 1000.0F, 1.0F, 1.0F);
+    public int getChroma(int x, int y) {
+        return ((int) Long.parseLong(value, 16) & 0xFF000000) | (Color.HSBtoRGB((Util.getMeasuringTimeMs() + x + y) / 2000.0F, 0.8F, 1.0F) & 0xFFFFFF);
+    }
+
+    public static int getRainbow() {
+        return Color.HSBtoRGB((Util.getMeasuringTimeMs()) / 2000.0F, 1.0F, 1.0F);
     }
 }

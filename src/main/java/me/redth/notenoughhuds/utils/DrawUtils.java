@@ -18,7 +18,19 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Matrix4f;
 
 public class DrawUtils extends DrawableHelper {
+    public static final Identifier TRANSPARENT = new Identifier("notenoughhuds", "textures/transparent.png");
     public static final MinecraftClient mc = MinecraftClient.getInstance();
+
+    public static void drawTransparentBackground(MatrixStack matrix, int x, int y, int w, int h) {
+        resetGl();
+        mc.getTextureManager().bindTexture(TRANSPARENT);
+        drawTexture(matrix, x, y, 0, 0, w, h, 2, 2);
+        RenderSystem.disableBlend();
+    }
+
+    public static void drawTransparentBackground(MatrixStack matrix, Rect2i rect) {
+        drawTransparentBackground(matrix, rect.getX(), rect.getY(), rect.getWidth(), rect.getHeight());
+    }
 
     public static void fill(MatrixStack matrix, Rect2i rect, int color) {
         fill(matrix, rect.getX(), rect.getY(), rect.getX() + rect.getWidth(), rect.getY() + rect.getHeight(), color);
@@ -74,6 +86,11 @@ public class DrawUtils extends DrawableHelper {
         }
 
         fill(matrix, x - 0.5F, y1, x + 0.5F, y2, color);
+    }
+
+
+    public static void drawOutline(MatrixStack matrix, Rect2i rect, int color) {
+        drawOutline(matrix, rect.getX(), rect.getY(), rect.getX() + rect.getWidth(), rect.getY() + rect.getHeight(), color);
     }
 
     public static void drawOutline(MatrixStack matrix, float x1, float y1, float x2, float y2, int color) {

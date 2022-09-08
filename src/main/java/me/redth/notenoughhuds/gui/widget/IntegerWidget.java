@@ -27,8 +27,8 @@ public class IntegerWidget extends OptionWidget {
         return (value - option.min) * editBox.getWidth() / range;
     }
 
-    private void setValueFromMouse(double d) {
-        setValue((int) d - editBox.getX());
+    private void setValueFromMouse(int d) {
+        setValue(d - editBox.getX());
     }
 
     private void setValue(int d) {
@@ -38,9 +38,9 @@ public class IntegerWidget extends OptionWidget {
     }
 
     @Override
-    public void onEditClick(int mouseX, int mouseY) {
-        if (editBox.contains(mouseX, mouseY)) {
-            setValueFromMouse(mouseX);
+    public void onClick(double mouseX, double mouseY) {
+        if (editBox.contains((int) mouseX, (int) mouseY)) {
+            setValueFromMouse((int) mouseX);
             dragging = true;
         }
     }

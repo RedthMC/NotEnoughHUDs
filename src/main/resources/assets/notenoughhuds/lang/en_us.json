@@ -28,6 +28,8 @@
   "hud.notenoughhuds.tps": "TPS",
   "key.notenoughhuds.open_editor": "Open NotEnoughHuds Editor",
   "screen.notenoughhuds.settings": "Settings",
+  "screen.notenoughhuds.reset_position": "Reset Position",
+  "screen.notenoughhuds.disable": "\u00a7cDisable",
   "screen.notenoughhuds.reload_config": "Reload Config",
   "screen.notenoughhuds.back": "Back",
   "setting.notenoughhuds.background": "Background",

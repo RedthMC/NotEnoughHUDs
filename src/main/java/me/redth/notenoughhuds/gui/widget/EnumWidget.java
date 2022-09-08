@@ -15,7 +15,7 @@ public class EnumWidget extends OptionWidget {
     }
 
     @Override
-    public void onEditClick(int mouseX, int mouseY) {
+    public void onClick(double mouseX, double mouseY) {
         enumType = option.next();
     }
 

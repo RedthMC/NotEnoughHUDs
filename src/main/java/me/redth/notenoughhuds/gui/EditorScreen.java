@@ -2,6 +2,7 @@ package me.redth.notenoughhuds.gui;
 
 import me.redth.notenoughhuds.NotEnoughHUDs;
 import me.redth.notenoughhuds.gui.widget.FlatButton;
+import me.redth.notenoughhuds.gui.widget.HudMenu;
 import me.redth.notenoughhuds.hud.BaseHud;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.util.InputUtil;
@@ -15,6 +16,7 @@ public class EditorScreen extends Screen {
     //    private final Snapper snapper;
     private BaseHud hovering;
     private BaseHud dragging;
+    private HudMenu currentMenu;
     private int xOffset;
     private int yOffset;
 
@@ -26,6 +28,7 @@ public class EditorScreen extends Screen {
 
     @Override
     protected void init() {
+        currentMenu = null;
         client.keyboard.setRepeatEvents(true);
         addDrawableChild(new FlatButton(width / 2 - 100, height / 2 + 12, 200, 20, "settings", b -> client.setScreenAndRender(new SettingsScreen(this))));
         addDrawableChild(new FlatButton(width / 2 - 100, height / 2 + 34, 200, 20, "back", b -> client.setScreenAndRender(parent)));
@@ -56,7 +59,7 @@ public class EditorScreen extends Screen {
 //            snapper.drawLines(matrix);
         } else if (hovering != null) {
             hovering.drawPad(matrix, HOVERING_COLOR);
-            renderTooltip(matrix, hovering.getTranslated(), mouseX, mouseY);
+            if (currentMenu == null) renderTooltip(matrix, hovering.getTranslated(), mouseX, mouseY);
         }
 
 
@@ -78,6 +81,10 @@ public class EditorScreen extends Screen {
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         super.mouseClicked(mouseX, mouseY, button);
+        if (currentMenu != null && !currentMenu.isMouseOver(mouseX, mouseY)) {
+            remove(currentMenu);
+            currentMenu = null;
+        }
         if (hovering != null) {
             switch (button) {
                 case 0 -> {
@@ -88,12 +95,17 @@ public class EditorScreen extends Screen {
 //                    updateSnaps(mouseX, mouseY);
                 }
                 case 1 -> {
-                    client.setScreenAndRender(new SettingsScreen(this, hovering));
-                    hovering = null;
-                }
-                case 2 -> {
-                    hovering.setEnabled(false);
-                    hovering = null;
+                    addDrawableChild(currentMenu = new HudMenu(hovering, (int) mouseX, (int) mouseY).add("settings", hud -> {
+
+                        client.setScreenAndRender(new SettingsScreen(this, hud));
+                        hovering = null;
+
+                    }).add("disable", hud -> {
+
+                        hud.setEnabled(false);
+                        hovering = null;
+
+                    }));
                 }
             }
 

@@ -116,6 +116,9 @@ public class SettingsScreen extends Screen {
 //        for (OptionWidget o : settings.getEntries()) {
 //            o.tick();
 //        }
+        for (OptionWidget setting : settings) {
+            setting.tick();
+        }
         if (current != null && !current.isEnabled()) current.tick();
     }
 
@@ -128,7 +131,11 @@ public class SettingsScreen extends Screen {
     @Override
     public boolean mouseReleased(double mouseX, double mouseY, int button) {
         hudList.mouseReleased(mouseX, mouseY, button);
-        return super.mouseReleased(mouseX, mouseY, button);
+        for (OptionWidget setting : settings) {
+            setting.onRelease(mouseX, mouseY);
+        }
+        return true;
+//        return super.mouseReleased(mouseX, mouseY, button);
 //        return settings.mouseReleased(mouseX, mouseY, button);
     }
 
@@ -144,7 +151,7 @@ public class SettingsScreen extends Screen {
 
         @Override
         public void renderButton(MatrixStack matrix, int mouseX, int mouseY, float delta) {
-            fill(matrix, x, y, x + width, y + height, hovered ? 0x80555555 : 0x80000000); // bg
+            if (hovered) fill(matrix, x, y, x + width, y + height, 0x2FFFFFFF); // bg
 
             RenderSystem.setShaderTexture(0, icon);
             DrawUtils.resetGl();

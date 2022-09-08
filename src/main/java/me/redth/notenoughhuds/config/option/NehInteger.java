@@ -40,12 +40,12 @@ public class NehInteger extends NehOption<Integer> {
     }
 
     @Override
-    public Integer e2t(JsonElement element) {
+    public Integer read(JsonElement element) {
         return element.getAsInt();
     }
 
     @Override
-    public JsonElement t2e(Integer element) {
+    public JsonElement write(Integer element) {
         return new JsonPrimitive(element);
     }
 
