@@ -23,7 +23,6 @@
 
 ### Working in Progress
 
--   Combo
 -   Ender Chest
 -   Pack
 -   Server
