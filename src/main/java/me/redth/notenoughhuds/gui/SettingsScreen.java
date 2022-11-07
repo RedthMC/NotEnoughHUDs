@@ -26,6 +26,11 @@ public class SettingsScreen extends GuiScreen {
 //    public GuiList<OptionWidget> settings;
 
 
+    @Override
+    public boolean doesGuiPauseGame() {
+        return false;
+    }
+
     public SettingsScreen(GuiScreen parent, BaseHud hud) {
         this.parent = parent;
         current = hud;
@@ -103,7 +108,7 @@ public class SettingsScreen extends GuiScreen {
 
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
-        drawDefaultBackground();
+        drawBackground(0);
         if (current != null) current.renderPlaceholder(width / 2 + 36, height / 4);
         super.drawScreen(mouseX, mouseY, partialTicks);
     }
@@ -145,9 +150,7 @@ public class SettingsScreen extends GuiScreen {
 
                 if (hovered) drawRect(xPosition, yPosition, xPosition + width, yPosition + height, 0x2FFFFFFF); // bg
 
-                DrawUtils.resetGl();
-                mc.getTextureManager().bindTexture(hud.icon);
-                drawModalRectWithCustomSizedTexture(xPosition + 4, yPosition + 4, 0, 0, 20, 20, 20, 20);
+                DrawUtils.drawScaledTexture(hud.icon, xPosition + 4, yPosition + 4, 0, 0, 20, 20, 20, 20);
 
                 int y1 = yPosition + 4;
                 for (String s : displayString.split(" ")) {

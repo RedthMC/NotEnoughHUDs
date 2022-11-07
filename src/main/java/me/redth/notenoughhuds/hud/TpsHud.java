@@ -9,7 +9,6 @@ public class TpsHud extends TextHud {
 
     public TpsHud() {
         super("tps", "%tps% TPS");
-        options.add(format);
     }
 
     @Override

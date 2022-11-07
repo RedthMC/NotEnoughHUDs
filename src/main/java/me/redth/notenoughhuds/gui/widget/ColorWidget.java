@@ -9,11 +9,13 @@ import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.MathHelper;
 import org.apache.commons.lang3.StringUtils;
+import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.Rectangle;
 
 import java.awt.Color;
 
 public class ColorWidget extends TextWidget {
+    private final int hashtagWidth;
     private final NehColor option;
     private final Rectangle colorPicker;
     private final SatXBr satXBr;
@@ -25,6 +27,7 @@ public class ColorWidget extends TextWidget {
 
     public ColorWidget(int x, int y, NehColor option) {
         super(x, y, option, 8, NehColor::isValidChar, NehColor::filterValidChars);
+        hashtagWidth = fr.getCharWidth('#');
         this.option = option;
         colorPicker = new Rectangle(editBox.getX() + editBox.getWidth() + 4, editBox.getY() - 43, 62, 110);
         int i = colorPicker.getX() + 2;
@@ -41,62 +44,86 @@ public class ColorWidget extends TextWidget {
         DrawUtils.drawTransparentBackground(editBox);
         DrawUtils.drawRect(editBox, option.asInt());
 
-        if (textFieldFocused) {
-            DrawUtils.drawRect(colorPicker, 0xFF121212);
-            DrawUtils.drawRect(textBox, 0xFF292929);
+        if (!textFieldFocused) return;
 
-            int j = selectionStart;
-            int k = selectionEnd;
-            boolean inbound = j >= 0 && j <= text.length();
-            int x = textBox.getX() + 2;
-            int y = textBox.getY() + 2;
+        DrawUtils.drawRect(colorPicker, 0xFF121212);
+        DrawUtils.drawRect(textBox, 0xFF292929);
 
-            fr.drawStringWithShadow("#" + StringUtils.rightPad(text, 8, '0'), x, y, 0xAAAAAA);
-            x += fr.getCharWidth('#');
-            int x2 = x;
+        int x = textBox.getX() + 2;
+        int y = textBox.getY() + 2;
 
-            if (k > text.length()) {
-                k = text.length();
-            }
+        fr.drawStringWithShadow("#" + StringUtils.rightPad(text, 8, '0'), x, y, 0xAAAAAA);
+        x += hashtagWidth;
+        fr.drawStringWithShadow(text, x, y, 0xFFFFFF);
 
-            if (text.length() > 0) {
-                String s1 = inbound ? text.substring(0, j) : text;
-                x2 = fr.drawStringWithShadow(s1, x, y, 0xFFFFFF);
-            }
+        int x1 = x + fr.getStringWidth(text.substring(0, selectionStart));
+        int x2 = x + fr.getStringWidth(text.substring(0, selectionEnd));
 
-            --x2;
+        if (focusedTicks / 6 % 2 == 0) {
+            drawRect(x2 - 1, y - 1, x2, y + 9, -3092272);
+        }
 
-            if (text.length() > 0 && inbound && j < text.length()) {
-                fr.drawStringWithShadow(text.substring(j), x2, y, 0xFFFFFF);
-            }
+        if (selectionStart != selectionEnd) {
+            highlight(x1, y - 1, x2, y + 9);
+        }
 
-            if (focusedTicks / 6 % 2 == 0 && inbound) {
-                drawRect(x2, y - 1, x2 + 1, y + 9, -3092272);
-            }
+//            int j = selectionStart;
+//            int k = selectionEnd;
+//            boolean inbound = j >= 0 && j <= text.length();
+//            int x = textBox.getX() + 2;
+//            int y = textBox.getY() + 2;
+//
+//            fr.drawStringWithShadow("#" + StringUtils.rightPad(text, 8, '0'), x, y, 0xAAAAAA);
+//            x += fr.getCharWidth('#');
+//            int x2 = x;
+//
+//            if (k > text.length()) {
+//                k = text.length();
+//            }
+//
+//            if (text.length() > 0) {
+//                String s1 = inbound ? text.substring(0, j) : text;
+//                x2 = fr.drawStringWithShadow(s1, x, y, 0xFFFFFF);
+//            }
+//
+//            --x2;
+//
+//            if (text.length() > 0 && inbound && j < text.length()) {
+//                fr.drawStringWithShadow(text.substring(j), x2, y, 0xFFFFFF);
+//            }
+//
+//            if (focusedTicks / 6 % 2 == 0 && inbound) {
+//                drawRect(x2 - 1, y - 1, x2, y + 9, -3092272);
+//            }
+//
+//            if (k != j) {
+//                int l1 = x + fr.getStringWidth(text.substring(0, k));
+//                highlight(x2, y - 1, l1 - 1, y + 9);
+//            }
 
-            if (k != j) {
-                int l1 = x + fr.getStringWidth(text.substring(0, k));
-                highlight(x2, y - 1, l1 - 1, y + 9);
-            }
-
-            if (dragging != null) {
-                dragging.onDrag(mouseX, mouseY);
-                option.set((int) (alphaSlider.alpha * 255) << 24 | (0xFFFFFF & Color.HSBtoRGB(hueSlider.hue, satXBr.sat, satXBr.br)));
-                syncValue();
-            }
-
-            hueSlider.render();
-            satXBr.render(hueSlider.hue);
-            alphaSlider.render(Color.HSBtoRGB(hueSlider.hue, satXBr.sat, satXBr.br));
-
-            int cmxw = chromaBox.getX() + chromaBox.getWidth();
-            int cmy = chromaBox.getY();
-            mc.fontRendererObj.drawStringWithShadow("Rainbow", chromaBox.getX(), cmy + 1, NehColor.getRainbow());
-            DrawUtils.drawOutline(cmxw - 10, cmy, cmxw, cmy + 10, 0xFFFFFFFF);
+        if (dragging != null) {
+            dragging.onDrag(mouseX, mouseY);
             if (option.chroma) {
-                drawRect(cmxw - 8, cmy + 2, cmxw - 2, cmy + 8, 0xFFFFFFFF);
-                updateColor();
+                String a = Integer.toString((int) (alphaSlider.alpha * 255), 16);
+                if (a.length() == 1) a = "0" + a;
+                option.set(a + option.get().substring(2));
+            } else {
+                option.set((int) (alphaSlider.alpha * 255) << 24 | (0xFFFFFF & Color.HSBtoRGB(hueSlider.hue, satXBr.sat, satXBr.br)));
             }
+            syncValue();
+        }
+
+        hueSlider.render();
+        satXBr.render(hueSlider.hue);
+        alphaSlider.render(Color.HSBtoRGB(hueSlider.hue, satXBr.sat, satXBr.br));
+
+        int cmxw = chromaBox.getX() + chromaBox.getWidth();
+        int cmy = chromaBox.getY();
+        mc.fontRendererObj.drawStringWithShadow("Rainbow", chromaBox.getX(), cmy + 1, NehColor.getRainbow());
+        DrawUtils.drawOutline(cmxw - 10, cmy, cmxw, cmy + 10, 0xFFFFFFFF);
+        if (option.chroma) {
+            drawRect(cmxw - 8, cmy + 2, cmxw - 2, cmy + 8, 0xFFFFFFFF);
+            updateColor();
         }
 
     }
@@ -126,22 +153,33 @@ public class ColorWidget extends TextWidget {
     @Override
     public void onClick(int mouseX, int mouseY) {
         setFocused(true);
-        if (colorPicker.contains(mouseX, mouseY)) {
-            if (textBox.contains(mouseX, mouseY)) {
-                int i = mouseX - textBox.getX();
-                String s = fr.trimStringToWidth(text.substring(firstCharIndex), textBox.getWidth());
-                setSelectionStart(fr.trimStringToWidth(s, i).length() + firstCharIndex);
-                updateColor();
-            } else {
-                if (alphaSlider.isHovered(mouseX, mouseY)) dragging = alphaSlider;
-                else if (chromaBox.contains(mouseX, mouseY)) option.chroma = !option.chroma;
-                else if (option.chroma) {
-                } else if (hueSlider.isHovered(mouseX, mouseY)) dragging = hueSlider;
-                else if (satXBr.isHovered(mouseX, mouseY)) dragging = satXBr;
+
+        if (!colorPicker.contains(mouseX, mouseY)) {
+            updateColor();
+            return;
+        }
+
+        if (textBox.contains(mouseX, mouseY)) {
+            int i = mouseX - textBox.getX() + hashtagWidth;
+            String s = fr.trimStringToWidth(text.substring(firstCharIndex), textBox.getWidth() - hashtagWidth);
+            setSelectionStart(fr.trimStringToWidth(s, i).length() + firstCharIndex);
+            updateColor();
+        } else {
+            if (alphaSlider.isHovered(mouseX, mouseY)) {
+                dragging = alphaSlider;
+            } else if (chromaBox.contains(mouseX, mouseY)) {
+                option.chroma = !option.chroma;
+                if (!option.chroma) updateColor();
+                return;
             }
 
-        } else {
-            updateColor();
+            if (option.chroma) return;
+
+            if (hueSlider.isHovered(mouseX, mouseY)) {
+                dragging = hueSlider;
+            } else if (satXBr.isHovered(mouseX, mouseY)) {
+                dragging = satXBr;
+            }
         }
     }
 
@@ -175,11 +213,11 @@ public class ColorWidget extends TextWidget {
             GlStateManager.disableAlpha();
             GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
             GlStateManager.shadeModel(7425);
-            wr.begin(7, DefaultVertexFormats.POSITION_COLOR);
+            wr.begin(5, DefaultVertexFormats.POSITION_COLOR);
 
-            WRPC(wr, x2, y, Color.HSBtoRGB(hue, 1.0F, 1.0F));
             WRPC(wr, x, y, 0xFFFFFFFF);
             WRPC(wr, x, y2, 0xFF000000);
+            WRPC(wr, x2, y, Color.HSBtoRGB(hue, 1.0F, 1.0F));
             WRPC(wr, x2, y2, 0xFF000000);
 
             tessellator.draw();
@@ -217,7 +255,7 @@ public class ColorWidget extends TextWidget {
             GlStateManager.enableBlend();
             GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
             GlStateManager.shadeModel(7425);
-            wr.begin(8, DefaultVertexFormats.POSITION_COLOR);
+            wr.begin(5, DefaultVertexFormats.POSITION_COLOR);
 
             WRPC(wr, x, y, 0xFFFF0000);
             WRPC(wr, x, y2, 0xFFFF0000);
@@ -263,10 +301,10 @@ public class ColorWidget extends TextWidget {
             GlStateManager.enableBlend();
             GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
             GlStateManager.shadeModel(7425);
-            wr.begin(7, DefaultVertexFormats.POSITION_COLOR);
-            WRPC(wr, x2, y, color & 0xFFFFFF);
+            wr.begin(5, DefaultVertexFormats.POSITION_COLOR);
             WRPC(wr, x, y, color);
             WRPC(wr, x, y2, color);
+            WRPC(wr, x2, y, color & 0xFFFFFF);
             WRPC(wr, x2, y2, color & 0xFFFFFF);
             tessellator.draw();
             GlStateManager.shadeModel(7424);

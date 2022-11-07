@@ -1,32 +1,37 @@
 package me.redth.notenoughhuds;
 
+import io.netty.channel.ChannelPipeline;
 import me.redth.notenoughhuds.config.NehCommand;
 import me.redth.notenoughhuds.config.NehConfig;
 import me.redth.notenoughhuds.gui.EditorScreen;
 import me.redth.notenoughhuds.hud.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.resources.IReloadableResourceManager;
 import net.minecraftforge.client.ClientCommandHandler;
+import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.client.event.MouseEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.InputEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
+import net.minecraftforge.fml.common.network.FMLNetworkEvent;
 
-@Mod(modid = "notenoughhuds", clientSideOnly = true)
+
+@Mod(modid = "notenoughhuds", version = "1.0.4", acceptedMinecraftVersions = "1.8.9", clientSideOnly = true)
 public class NotEnoughHUDs {
     public static final Minecraft mc = Minecraft.getMinecraft();
     private static NotEnoughHUDs instance;
     public boolean showScreen;
     public HudManager hudManager;
     public NehConfig config;
-    public ComboHud comboHud;
-    public KeystrokesHud keystrokesHud;
+    //    public ComboHud comboHud;
+    public EnderChestHud ecHud;
+    public PackHud packHud;
     public PingHud pingHud;
     public ReachHud reachHud;
     public ServerHud serverHud;
@@ -50,15 +55,15 @@ public class NotEnoughHUDs {
         hudManager = new HudManager();
         hudManager.register(new ArmorHud());
         hudManager.register(new CoordsHud());
-        hudManager.register(comboHud = new ComboHud());
+//        hudManager.register(comboHud = new ComboHud());
         hudManager.register(new CpsHud());
         hudManager.register(new DirectionHud());
         hudManager.register(new EffectHud());
         hudManager.register(new FpsHud());
-        hudManager.register(keystrokesHud = new KeystrokesHud());
+        hudManager.register(new KeystrokesHud());
         hudManager.register(new InventoryHud());
-        hudManager.register(new EnderChestHud());
-        hudManager.register(new PackHud());
+        hudManager.register(ecHud = new EnderChestHud());
+        hudManager.register(packHud = new PackHud());
         hudManager.register(pingHud = new PingHud());
         hudManager.register(reachHud = new ReachHud());
         hudManager.register(new ScoreboardHud());
@@ -69,7 +74,10 @@ public class NotEnoughHUDs {
         hudManager.register(tpsHud = new TpsHud());
 
         config.load();
+
+        ((IReloadableResourceManager) mc.getResourceManager()).registerReloadListener(packHud);
     }
+
 
     @SubscribeEvent
     public void onHudRender(RenderGameOverlayEvent.Post e) {
@@ -90,13 +98,24 @@ public class NotEnoughHUDs {
     }
 
     @SubscribeEvent
-    public void onClientTick(TickEvent.ClientTickEvent e) {
-        if (e.phase == TickEvent.Phase.START) {
-            if (showScreen) {
-                mc.displayGuiScreen(new EditorScreen(mc.currentScreen));
-                showScreen = false;
+    public void onServerJoined(FMLNetworkEvent.ClientConnectedToServerEvent e) {
+        ChannelPipeline pipeline = e.manager.channel().pipeline();
+        if (pipeline.get("neh_handler") == null && pipeline.get("packet_handler") != null) {
+            try {
+                pipeline.addBefore("packet_handler", "neh_handler", new PacketHandler());
+            } catch (Throwable ignored) {
             }
-        } else if (mc.theWorld != null || BaseHud.isEditing()) for (BaseHud hud : hudManager.getEnabledHuds()) {
+        }
+    }
+
+    @SubscribeEvent
+    public void onClientTick(TickEvent.ClientTickEvent e) {
+        if (e.phase == TickEvent.Phase.START) return;
+        if (showScreen) {
+            mc.displayGuiScreen(new EditorScreen(mc.currentScreen));
+            showScreen = false;
+        }
+        if (mc.theWorld != null || BaseHud.isEditing()) for (BaseHud hud : hudManager.getEnabledHuds()) {
             hud.tick();
         }
     }
@@ -113,21 +132,23 @@ public class NotEnoughHUDs {
     }
 
     @SubscribeEvent
+    public void onInitGui(GuiScreenEvent.InitGuiEvent.Post e) {
+        if (ecHud.isEnabled()) {
+            ecHud.onInitGui(e);
+        }
+    }
+
+    @SubscribeEvent
     public void onHitEntity(AttackEntityEvent e) {
         if (reachHud.isEnabled())
             reachHud.updateReach(e);
     }
 
-    @SubscribeEvent
-    public void onHurtEntity(LivingHurtEvent e) {
-        if (comboHud.isEnabled())
-            comboHud.updateCombo(e);
-    }
+//    @SubscribeEvent
+//    public void onHurtEntity(LivingHurtEvent e) {
+//        if (comboHud.isEnabled())
+//            comboHud.updateCombo(e);
+//    }
 
-    @SuppressWarnings("unused")
-    public static void onTimeUpdate() {
-        instance.tpsHud.onTimeUpdate();
-    }
-
-    //todo: condition, color picker
+    //todo: combo
 }

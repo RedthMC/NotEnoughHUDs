@@ -16,7 +16,7 @@ import net.minecraft.util.ResourceLocation;
 import java.awt.image.BufferedImage;
 
 public class ServerHud extends BaseHud {
-    public static final ServerData PLACEHOLDER = new ServerData("Hypixel", "mc.hypixel.net", false);
+    public static final ServerData PLACEHOLDER = new ServerData("Server", "server.ip", false);
     public static final ResourceLocation ICON = new ResourceLocation("notenoughhuds/server_icon");
     public static final ResourceLocation UNKNOWN = new ResourceLocation("textures/misc/unknown_server.png");
     public final NehBoolean textShadow = new NehBoolean("text_shadow", true);
@@ -37,6 +37,13 @@ public class ServerHud extends BaseHud {
     @Override
     public void tick() {
         server = getServer();
+        if (server == null) {
+            loadIcon = true;
+            loaded = false;
+        } else if (loadIcon) {
+            loadIcon(server);
+            loadIcon = false;
+        }
         super.tick();
     }
 
@@ -46,29 +53,15 @@ public class ServerHud extends BaseHud {
 
     @Override
     public void render() {
-        if (server == null) {
-            loadIcon = true;
-            return;
-        }
-        if (loadIcon) {
-            loadIcon(server);
-            loadIcon = false;
-        }
+        if (server == null) return;
         drawBg(backgroundColor);
         int x = 2;
         int y = 2;
-        mc.getTextureManager().bindTexture(loaded ? ICON : UNKNOWN);
-        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-        GlStateManager.enableBlend();
-        GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
-        GlStateManager.blendFunc(770, 771);
-        drawModalRectWithCustomSizedTexture(x, y, 0.0F, 0.0F, 32, 32, 32.0F, 32.0F);
-        GlStateManager.disableBlend();
+        drawScaledTexture(loaded ? ICON : UNKNOWN, x, y, 0.0F, 0.0F, 32, 32, 32.0F, 32.0F);
         drawString(server.serverIP, x + 34, y + 17 - 4.0F, nameColor.asInt(), textShadow.get());
     }
 
     public void loadIcon(ServerData server) {
-        loaded = false;
         if (server.getBase64EncodedIconData() == null) return;
         ByteBuf bytebuf = Unpooled.copiedBuffer(server.getBase64EncodedIconData(), Charsets.UTF_8);
         ByteBuf bytebuf1 = Base64.decode(bytebuf);

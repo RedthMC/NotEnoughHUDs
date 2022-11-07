@@ -69,26 +69,14 @@ public abstract class TextWidget extends OptionWidget {
                 j1 = fr.drawStringWithShadow(s1, x, y - 4, 0xFFFFFF);
             }
 
-            boolean outbound = selectionStart < text.length() || text.length() >= maxLength;
-            int k1 = j1;
-
-            if (!inbound) {
-                k1 = j > 0 ? x + editBox.getWidth() : x;
-            } else if (outbound) {
-                k1 = j1 - 1;
-                --j1;
-            }
+            int k1 = --j1;
 
             if (s.length() > 0 && inbound && j < s.length()) {
                 fr.drawStringWithShadow(s.substring(j), j1, y - 4, 0xFFFFFF);
             }
 
             if (textFieldFocused && focusedTicks / 6 % 2 == 0 && inbound) {
-                if (outbound) {
-                    drawRect(k1, y - 5, k1 + 1, y + 5, -3092272);
-                } else {
-                    fr.drawStringWithShadow("_", k1, y - 4, 0xFFFFFF);
-                }
+                drawRect(k1, y - 5, k1 + 1, y + 5, -3092272);
             }
 
             if (k != j) {
@@ -398,17 +386,17 @@ public abstract class TextWidget extends OptionWidget {
     }
 
     public void highlight(int x1, int y1, int x2, int y2) {
-//        if (x1 < x2) {
-//            int i = x1;
-//            x1 = x2;
-//            x2 = i;
-//        }
-//
-//        if (y1 < y2) {
-//            int j = y1;
-//            y1 = y2;
-//            y2 = j;
-//        }
+        if (x1 < x2) {
+            int i = x1;
+            x1 = x2;
+            x2 = i;
+        }
+
+        if (y1 < y2) {
+            int j = y1;
+            y1 = y2;
+            y2 = j;
+        }
 //        int k = editBox.getX() + editBox.getWidth();
 //        if (x2 > k) {
 //            x2 = k;
@@ -420,9 +408,12 @@ public abstract class TextWidget extends OptionWidget {
 
         Tessellator tessellator = Tessellator.getInstance();
         WorldRenderer worldrenderer = tessellator.getWorldRenderer();
+        GlStateManager.disableAlpha();
+        GlStateManager.enableBlend();
         GlStateManager.color(0.0F, 0.0F, 255.0F, 255.0F);
         GlStateManager.disableTexture2D();
         GlStateManager.enableColorLogic();
+        GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
         GlStateManager.colorLogicOp(5387);
         worldrenderer.begin(7, DefaultVertexFormats.POSITION);
         worldrenderer.pos(x1, y2, 0.0D).endVertex();
@@ -432,6 +423,9 @@ public abstract class TextWidget extends OptionWidget {
         tessellator.draw();
         GlStateManager.disableColorLogic();
         GlStateManager.enableTexture2D();
+        GlStateManager.disableBlend();
+        GlStateManager.enableTexture2D();
+        GlStateManager.enableAlpha();
     }
 
     public void setFocused(boolean focused) {

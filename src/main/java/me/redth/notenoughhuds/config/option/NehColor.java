@@ -39,8 +39,7 @@ public class NehColor extends NehOption<String> {
 
 
     public void set(int value) {
-        String s = Long.toString(value & 0xFFFFFFFFL, 16);
-        set(StringUtils.leftPad(s, 8, '0'));
+        set(Long.toString(value & 0xFFFFFFFFL, 16));
     }
 
     @Override
@@ -80,11 +79,11 @@ public class NehColor extends NehOption<String> {
     }
 
     public int getChroma(int x, int y) {
-        return ((int) Long.parseLong(value, 16) & 0xFF000000) | (Color.HSBtoRGB((Minecraft.getSystemTime() + x + y) / 2000.0F, 1.0F, 1.0F) & 0xFFFFFF);
+        return ((int) Long.parseLong(value, 16) & 0xFF000000) | (Color.HSBtoRGB((Minecraft.getSystemTime() + x + y) / 2000.0F, 0.8F, 0.8F) & 0xFFFFFF);
     }
 
     public static int getRainbow() {
-        return Color.HSBtoRGB((Minecraft.getSystemTime()) / 2000.0F, 1.0F, 1.0F);
+        return Color.HSBtoRGB((Minecraft.getSystemTime()) / 2000.0F, 0.8F, 0.8F);
     }
 
 }

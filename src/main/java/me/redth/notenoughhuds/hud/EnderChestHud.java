@@ -1,17 +1,27 @@
 package me.redth.notenoughhuds.hud;
 
 import me.redth.notenoughhuds.config.option.NehBoolean;
+import net.minecraft.client.gui.inventory.GuiChest;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.entity.RenderItem;
-import net.minecraft.inventory.InventoryEnderChest;
+import net.minecraft.inventory.ContainerChest;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.network.play.server.S2DPacketOpenWindow;
+import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.ChatComponentTranslation;
+import net.minecraft.util.IChatComponent;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.client.event.GuiScreenEvent;
+
+import java.util.List;
 
 public class EnderChestHud extends BaseHud {
-    public final ResourceLocation CONTAINER_GUI = new ResourceLocation("notenoughhuds", "textures/container.png");
+    public static final IChatComponent EC_TEXT = new ChatComponentTranslation("container.enderchest");
+    public static final ResourceLocation CONTAINER_GUI = new ResourceLocation("notenoughhuds", "textures/container.png");
     public final NehBoolean showBg = new NehBoolean("show_background", true);
-    private InventoryEnderChest enderChest = null;
+    private IInventory enderChest = null;
 
     public EnderChestHud() {
         super("ender_chest");
@@ -20,7 +30,7 @@ public class EnderChestHud extends BaseHud {
 
     @Override
     public void render() {
-        drawTexture(CONTAINER_GUI, 0, 0, 0, 67, 176, 67);
+        if (showBg.get()) drawTexture(CONTAINER_GUI, 0, 0, 0, 67, 176, 67);
 
         if (enderChest == null) return;
 
@@ -28,6 +38,8 @@ public class EnderChestHud extends BaseHud {
         int y = 7;
 
         RenderItem ri = mc.getRenderItem();
+        zLevel = 100.0F;
+        ri.zLevel = 100.0F;
         GlStateManager.enableRescaleNormal();
         GlStateManager.enableBlend();
         GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
@@ -45,7 +57,8 @@ public class EnderChestHud extends BaseHud {
         RenderHelper.disableStandardItemLighting();
         GlStateManager.disableBlend();
         GlStateManager.disableRescaleNormal();
-
+        zLevel = 0.0F;
+        ri.zLevel = 0.0F;
     }
 
     @Override
@@ -58,9 +71,14 @@ public class EnderChestHud extends BaseHud {
         return 67;
     }
 
-    @Override
-    public void tick() {
-        enderChest = mc.thePlayer == null ? null : mc.thePlayer.getInventoryEnderChest();
-        super.tick();
+    public void onInitGui(GuiScreenEvent.InitGuiEvent.Post e) {
+        if (e.gui instanceof GuiChest) {
+            IInventory chest = ((ContainerChest) mc.thePlayer.openContainer).getLowerChestInventory();
+            if (EC_TEXT.getUnformattedText().equals(chest.getName())) {
+                enderChest = chest;
+            }
+        }
+
     }
+
 }

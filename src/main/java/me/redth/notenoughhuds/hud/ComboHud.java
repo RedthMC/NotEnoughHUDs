@@ -2,9 +2,9 @@ package me.redth.notenoughhuds.hud;
 
 import me.redth.notenoughhuds.config.option.NehInteger;
 import net.minecraft.client.Minecraft;
-import net.minecraftforge.event.entity.living.LivingHurtEvent;
+import net.minecraftforge.event.entity.living.LivingAttackEvent;
 
-public class ComboHud extends TextHud {
+public class ComboHud extends TextHud{
     public final NehInteger expire = new NehInteger("expire", 2, 1, 10, i -> i + " ms");
     private static int combo;
     private long lastHit;
@@ -14,12 +14,11 @@ public class ComboHud extends TextHud {
         options.add(expire);
     }
 
-    public void updateCombo(LivingHurtEvent e) {
-        if (e.source.getEntity() == null) return;
-        if (e.source.getEntity().equals(mc.thePlayer)) {
+    public void updateCombo(LivingAttackEvent e) {
+        if (true) {
             ++combo;
             lastHit = Minecraft.getSystemTime();
-        } else if (e.entity.getUniqueID().equals(mc.thePlayer.getUniqueID())) {
+        } else if (e.entity.equals(mc.thePlayer)) {
             combo = 0;
         }
     }

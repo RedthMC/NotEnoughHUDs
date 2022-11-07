@@ -115,6 +115,7 @@ public abstract class BaseHud extends DrawUtils {
 
     public void renderScaled() {
         render(x, y, false);
+        if (isEditing()) drawOutline(x, y, x + scaledWidth, y + scaledHeight, 0.5F, 0xFF00FFFF);
     }
 
     public void renderPlaceholder(int x, int y) {
@@ -176,7 +177,7 @@ public abstract class BaseHud extends DrawUtils {
         drawRect(x, y, x + width, y + height, color);
     }
 
-    public void drawBg(NehColor backgroundColor) {
+    protected void drawBg(NehColor backgroundColor) {
         drawPad(0, 0, backgroundColor.asInt());
     }
 

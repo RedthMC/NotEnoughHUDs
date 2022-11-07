@@ -5,32 +5,32 @@ import me.redth.notenoughhuds.utils.DrawUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.fml.client.config.GuiButtonExt;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.function.Consumer;
 
 public class HudMenu extends GuiButtonExt {
     public static final int ENTRY_HEIGHT = 10;
-    public final BaseHud hud;
-    public final List<MenuEntry> entries = new ArrayList<>();
+    public final MenuEntry[] entries;
+    public BaseHud hud;
 
-    public HudMenu(BaseHud hud, int xPos, int yPos) {
-        super(111, xPos, yPos, 64, 0, "");
-        this.hud = hud;
+    public HudMenu(MenuEntry... entries) {
+        super(111, 0, 0, 64, entries.length * ENTRY_HEIGHT + 1, "");
+        this.entries = entries;
     }
 
-    public HudMenu add(String name, Consumer<BaseHud> action) {
-        entries.add(new MenuEntry(name, action));
-        height += ENTRY_HEIGHT;
-        return this;
+    public void show(BaseHud hud, int x, int y, boolean left, boolean top) {
+        if (left) x -= width;
+        if (top) y -= height;
+        this.hud = hud;
+        this.xPosition = x;
+        this.yPosition = y;
     }
 
     @Override
     public boolean mousePressed(Minecraft mc, int mouseX, int mouseY) {
         if (super.mousePressed(mc, mouseX, mouseY)) {
             int i = (mouseY - yPosition) / ENTRY_HEIGHT;
-            if (i >= entries.size()) return false;
-            entries.get((mouseY - yPosition) / ENTRY_HEIGHT).run();
+            if (i >= entries.length) return false;
+            entries[i].run(hud);
             return true;
         }
         return false;
@@ -42,21 +42,24 @@ public class HudMenu extends GuiButtonExt {
 
         drawRect(xPosition, yPosition, xPosition + width, yPosition + height, 0xFF111111);
         DrawUtils.drawOutline(xPosition, yPosition, xPosition + width, yPosition + height, 0xFFFFFFFF);
-        int i = 1;
+
+        int i = 2;
+
         for (MenuEntry entry : entries) {
-            mc.fontRendererObj.drawStringWithShadow(entry.name, xPosition + 2, yPosition + i, 0xFFCCCCCC);
+            mc.fontRendererObj.drawStringWithShadow(entry.name, xPosition + 2, yPosition + i, 0xFFFFFF);
             i += ENTRY_HEIGHT;
         }
+
         if (hovered) {
             i = (mouseY - yPosition) / ENTRY_HEIGHT;
-            if (i < entries.size()) {
+            if (i < entries.length) {
                 int y = yPosition + i * ENTRY_HEIGHT;
-                drawRect(xPosition, y, xPosition + width, y + ENTRY_HEIGHT, 0x50FFFFFF);
+                drawRect(xPosition, y, xPosition + width, y + ENTRY_HEIGHT, 0x3FFFFFFF);
             }
         }
     }
 
-    public class MenuEntry {
+    public static class MenuEntry {
         public final String name;
         public final Consumer<BaseHud> action;
 
@@ -65,7 +68,7 @@ public class HudMenu extends GuiButtonExt {
             this.action = action;
         }
 
-        public void run() {
+        public void run(BaseHud hud) {
             action.accept(hud);
         }
     }

@@ -144,24 +144,29 @@ public class ArmorHud extends BaseHud {
     }
 
     public enum DurabilityFormat implements NehEnum.EnumType {
-        PERCENT(item -> (int) Math.round((1.0D - item.getItem().getDurabilityForDisplay(item) * 100.0D)) + "%"),
-        VALUE(item -> String.valueOf(item.getMaxDamage() - item.getItemDamage())),
-        MAX(item -> (item.getMaxDamage() - item.getItemDamage()) + "/" + item.getMaxDamage());
-
-        private final Function<ItemStack, String> formatter;
-
-        DurabilityFormat(Function<ItemStack, String> formatter) {
-            this.formatter = formatter;
-        }
+        PERCENT {
+            @Override
+            public String format(ItemStack item) {
+                return (int) Math.round(((1.0D - item.getItem().getDurabilityForDisplay(item)) * 100.0D)) + "%";
+            }
+        }, VALUE {
+            @Override
+            public String format(ItemStack item) {
+                return String.valueOf(item.getMaxDamage() - item.getItemDamage());
+            }
+        }, MAX {
+            @Override
+            public String format(ItemStack item) {
+                return (item.getMaxDamage() - item.getItemDamage()) + "/" + item.getMaxDamage();
+            }
+        };
 
         @Override
         public String getId() {
             return "durability_format";
         }
 
-        public String format(ItemStack item) {
-            return formatter.apply(item);
-        }
+        public abstract String format(ItemStack item);
 
         public NehEnum.EnumType enumOf(String text) {
             return valueOf(text);
