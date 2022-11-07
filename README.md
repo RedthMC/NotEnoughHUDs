@@ -21,7 +21,7 @@
 -   Time
 -   TPS
 
-### Work in Progress
+### Working in Progress
 
 -   Combo
 -   Ender Chest
