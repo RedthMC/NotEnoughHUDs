@@ -1,5 +1,6 @@
 package me.redth.notenoughhuds.hud;
 
+import com.google.common.collect.ImmutableList;
 import me.redth.notenoughhuds.NotEnoughHUDs;
 import me.redth.notenoughhuds.config.option.NehColor;
 import me.redth.notenoughhuds.config.option.NehEnum;
@@ -115,7 +116,7 @@ public abstract class BaseHud extends DrawUtils {
 
     public void renderScaled() {
         render(x, y, false);
-        if (isEditing()) drawOutline(x, y, x + scaledWidth, y + scaledHeight, 0.5F, 0xFF00FFFF);
+        if (isEditing()) drawOutline(x, y, x + scaledWidth, y + scaledHeight, 0.5F, 0xFF00FF00);
     }
 
     public void renderPlaceholder(int x, int y) {
@@ -187,6 +188,11 @@ public abstract class BaseHud extends DrawUtils {
         @Override
         public String getId() {
             return "alignment";
+        }
+
+        @Override
+        public List<NehEnum.EnumType> constants() {
+            return ImmutableList.of(TOP, LEFT, CENTER, RIGHT, BOTTOM);
         }
     }
 }

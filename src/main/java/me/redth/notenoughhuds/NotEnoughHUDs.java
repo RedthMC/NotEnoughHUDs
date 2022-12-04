@@ -22,14 +22,13 @@ import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.common.network.FMLNetworkEvent;
 
 
-@Mod(modid = "notenoughhuds", version = "1.0.4", acceptedMinecraftVersions = "1.8.9", clientSideOnly = true)
+@Mod(modid = "notenoughhuds", version = "1.0.5", acceptedMinecraftVersions = "1.8.9", clientSideOnly = true)
 public class NotEnoughHUDs {
     public static final Minecraft mc = Minecraft.getMinecraft();
     private static NotEnoughHUDs instance;
     public boolean showScreen;
     public HudManager hudManager;
     public NehConfig config;
-    //    public ComboHud comboHud;
     public EnderChestHud ecHud;
     public PackHud packHud;
     public PingHud pingHud;
@@ -55,7 +54,6 @@ public class NotEnoughHUDs {
         hudManager = new HudManager();
         hudManager.register(new ArmorHud());
         hudManager.register(new CoordsHud());
-//        hudManager.register(comboHud = new ComboHud());
         hudManager.register(new CpsHud());
         hudManager.register(new DirectionHud());
         hudManager.register(new EffectHud());
@@ -144,11 +142,5 @@ public class NotEnoughHUDs {
             reachHud.updateReach(e);
     }
 
-//    @SubscribeEvent
-//    public void onHurtEntity(LivingHurtEvent e) {
-//        if (comboHud.isEnabled())
-//            comboHud.updateCombo(e);
-//    }
-
-    //todo: combo
+    //todo: snapping
 }

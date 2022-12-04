@@ -166,10 +166,11 @@ public class ArmorHud extends BaseHud {
             return "durability_format";
         }
 
-        public abstract String format(ItemStack item);
-
-        public NehEnum.EnumType enumOf(String text) {
-            return valueOf(text);
+        @Override
+        public List<NehEnum.EnumType> constants() {
+            return ImmutableList.of(PERCENT, VALUE, MAX);
         }
+
+        public abstract String format(ItemStack item);
     }
 }

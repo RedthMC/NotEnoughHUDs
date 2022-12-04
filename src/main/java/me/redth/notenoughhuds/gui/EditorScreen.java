@@ -2,10 +2,7 @@ package me.redth.notenoughhuds.gui;
 
 import com.google.common.collect.ImmutableList;
 import me.redth.notenoughhuds.NotEnoughHUDs;
-import me.redth.notenoughhuds.gui.widget.HudMenu;
 import me.redth.notenoughhuds.hud.BaseHud;
-import me.redth.notenoughhuds.utils.DrawUtils;
-import net.minecraft.client.audio.ISound;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
@@ -16,27 +13,24 @@ import net.minecraftforge.fml.client.config.GuiButtonExt;
 import org.lwjgl.input.Keyboard;
 
 import java.io.IOException;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 public class EditorScreen extends GuiScreen {
     public static final int HOVERING_COLOR = 0x80FFFFFF;
     private static final NotEnoughHUDs neh = NotEnoughHUDs.getInstance();
     private final GuiScreen parent;
-    //    private final SnappingUtils snapper;
-    private final HudMenu hudMenu = new HudMenu(new HudMenu.MenuEntry("Settings", hud -> {
-        mc.displayGuiScreen(new SettingsScreen(this, hud));
-        hovering = null;
-    }), new HudMenu.MenuEntry("Disable", hud -> {
-        hud.setEnabled(false);
-        hovering = null;
-    }));
-    private BaseHud hovering;
-    private BaseHud dragging;
+    public BaseHud hovering;
+    public BaseHud dragging;
+    private final Set<Integer> edgeXs = new LinkedHashSet<>();
+    private final Set<Integer> centerXs = new LinkedHashSet<>();
+    private final Set<Integer> edgeYs = new LinkedHashSet<>();
+    private final Set<Integer> centerYs = new LinkedHashSet<>();
     private int xOffset;
     private int yOffset;
 
     public EditorScreen(GuiScreen parent) {
         this.parent = parent;
-//        snapper = new SnappingUtils(this);
     }
 
     @Override
@@ -78,11 +72,9 @@ public class EditorScreen extends GuiScreen {
                 break;
             }
         }
-        if (buttonList.contains(hudMenu)) {
-            hudMenu.hud.drawPad(HOVERING_COLOR);
-        } else if (dragging != null) {
-            dragging.setX(mouseX + xOffset);
-            dragging.setY(mouseY + yOffset);
+        if (dragging != null) {
+            dragging.setX(getSnappedX(mouseX));
+            dragging.setY(getSnappedY(mouseY));
             dragging.drawPad(HOVERING_COLOR);
         } else if (hovering != null) {
             hovering.drawPad(HOVERING_COLOR);
@@ -92,6 +84,7 @@ public class EditorScreen extends GuiScreen {
         drawCenteredString(fontRendererObj, "NotEnoughHUDs", width / 2, height / 2 - 26, 16777215);
         drawCenteredString(fontRendererObj, "Left Click to Drag", width / 2, height / 2 + 78, 16777215);
         drawCenteredString(fontRendererObj, "Right Click to Open Settings", width / 2, height / 2 + 87, 16777215);
+        drawCenteredString(fontRendererObj, "Middle Click to Disable", width / 2, height / 2 + 96, 16777215);
         super.drawScreen(mouseX, mouseY, delta);
     }
 
@@ -99,34 +92,24 @@ public class EditorScreen extends GuiScreen {
     public void mouseClicked(int mouseX, int mouseY, int button) throws IOException {
         super.mouseClicked(mouseX, mouseY, button);
 
-        buttonList.remove(hudMenu);
-
         if (hovering != null) {
             switch (button) {
                 case 0:
                     dragging = hovering;
-                    xOffset = dragging.getX() - mouseX;
-                    yOffset = dragging.getY() - mouseY;
-//                    updateSnaps(mouseX, mouseY);
+                    initSnap(mouseX, mouseY);
                     break;
                 case 1:
-                    hudMenu.show(hovering, mouseX, mouseY, mouseX > width / 2, mouseY > height / 2);
-                    buttonList.add(hudMenu);
+                    mc.displayGuiScreen(new SettingsScreen(this, hovering));
+                    hovering = null;
+                    break;
+                case 2:
+                    hovering.setEnabled(false);
+                    hovering = null;
                     break;
             }
             mc.getSoundHandler().playSound(PositionedSoundRecord.create(new ResourceLocation("gui.button.press"), 1.0F));
         }
     }
-
-//    public void mouseMoved(int mouseX, int mouseY) {
-//        if (dragging != null) {
-//            updateSnaps(mouseX, mouseY);
-//            dragging.setX(snapper.getSnappedX());
-//            dragging.setY(snapper.getSnappedY());
-//            dragging.setX(mouseX + xOffset);
-//            dragging.setY(mouseY + yOffset);
-//        }
-//    }
 
     @Override
     protected void mouseReleased(int mouseX, int mouseY, int button) {
@@ -157,7 +140,86 @@ public class EditorScreen extends GuiScreen {
         }
     }
 
-//    public void updateSnaps(double mouseX, double mouseY) {
-//        snapper.updateSnaps(dragging, (int) mouseX + xOffset, (int) mouseY + yOffset);
-//    }
+    public void initSnap(int mouseX, int mouseY) {
+        xOffset = dragging.getX() - mouseX;
+        yOffset = dragging.getY() - mouseY;
+
+        edgeXs.clear();
+        centerXs.clear();
+        edgeYs.clear();
+        centerYs.clear();
+
+        centerXs.add(width / 2);
+        centerYs.add(height / 2);
+
+        for (BaseHud hud : neh.hudManager.getEnabledHuds()) {
+            if (hud.equals(dragging)) continue;
+
+            int hx = hud.getX();
+            int hy = hud.getY();
+            int hw = hud.getScaledWidth();
+            int hh = hud.getScaledHeight();
+
+            edgeXs.add(hx);
+            edgeXs.add(hx + hw);
+            centerXs.add(hx + hw / 2);
+
+            edgeYs.add(hy);
+            edgeYs.add(hy + hh);
+            centerYs.add(hy + hh / 2);
+        }
+
+    }
+
+    public int getSnappedX(int mouseX) {
+        mouseX += xOffset;
+
+        if (GuiScreen.isShiftKeyDown()) return mouseX;
+
+        int width = dragging.getScaledWidth();
+
+        for (int centerX : centerXs) {
+            if (snapsWith(mouseX + width / 2, centerX)) return drawLineX(centerX, centerX - width / 2);
+        }
+        for (int edgeX : edgeXs) {
+            if (snapsWith(mouseX, edgeX)) return drawLineX(edgeX, edgeX);
+            if (snapsWith(mouseX + width, edgeX)) return drawLineX(edgeX, edgeX - width);
+        }
+
+        return mouseX;
+    }
+
+    public int getSnappedY(int mouseY) {
+        mouseY += yOffset;
+
+        if (GuiScreen.isShiftKeyDown()) return mouseY;
+
+        int height = dragging.getScaledHeight();
+
+        for (int centerY : centerYs) {
+            if (snapsWith(mouseY + height / 2, centerY)) return drawLineY(centerY, centerY - height / 2);
+        }
+        for (int edgeY : edgeYs) {
+            if (snapsWith(mouseY, edgeY)) return drawLineY(edgeY, edgeY);
+            if (snapsWith(mouseY + height, edgeY)) return drawLineY(edgeY, edgeY - height);
+        }
+
+        return mouseY;
+    }
+
+    public static boolean snapsWith(int pos, int snap) {
+        return pos >= snap - 4 && pos < snap + 4;
+    }
+
+    public int drawLineX(int lineX, int snapX) {
+        if (snapX >= 0 && snapX + dragging.getScaledWidth() < width)
+            drawVerticalLine(lineX, 0, height, 0xFF00FFAA);
+        return snapX;
+    }
+
+    public int drawLineY(int lineY, int snapY) {
+        if (snapY >= 0 && snapY + dragging.getScaledHeight() < height)
+            drawHorizontalLine(0, width, lineY, 0xFF00FFAA);
+        return snapY;
+    }
 }

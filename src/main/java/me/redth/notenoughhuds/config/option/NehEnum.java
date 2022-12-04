@@ -5,6 +5,8 @@ import com.google.gson.JsonPrimitive;
 import me.redth.notenoughhuds.gui.widget.EnumWidget;
 import me.redth.notenoughhuds.gui.widget.OptionWidget;
 
+import java.util.List;
+
 public class NehEnum extends NehOption<NehEnum.EnumType> {
 
     public NehEnum(String id, EnumType defaultValue) {
@@ -13,12 +15,12 @@ public class NehEnum extends NehOption<NehEnum.EnumType> {
 
     @Override
     public EnumType read(JsonElement element) {
-        return defaultValue.enumOf(element.getAsString());
+        return defaultValue.of(element.getAsString());
     }
 
     @Override
     public JsonElement write(EnumType element) {
-        return new JsonPrimitive(element.name());
+        return new JsonPrimitive(element.toString());
     }
 
     public EnumType next() {
@@ -33,17 +35,11 @@ public class NehEnum extends NehOption<NehEnum.EnumType> {
     public interface EnumType {
         String getId();
 
-        int ordinal();
+        List<EnumType> constants();
 
-        String name();
-
-        default EnumType[] enums() {
-            return getClass().getEnumConstants();
-        }
-
-        default EnumType enumOf(String name) {
-            for (EnumType e : enums()) {
-                if (e.name().equals(name))
+        default EnumType of(String name) {
+            for (EnumType e : constants()) {
+                if (e.toString().equals(name))
                     return e;
             }
             return null;
@@ -54,7 +50,8 @@ public class NehEnum extends NehOption<NehEnum.EnumType> {
         }
 
         default EnumType getNext() {
-            return enums()[(ordinal() + 1) % enums().length];
+            List<EnumType> e = constants();
+            return e.get((e.indexOf(this) + 1) % e.size());
         }
     }
 }

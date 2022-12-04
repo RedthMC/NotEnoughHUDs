@@ -10,7 +10,6 @@ import net.minecraft.client.gui.GuiScreen;
 public class SnappingUtils extends DrawUtils {
     public static final int LINE_COLOR = 0xFF00FFAA;
     public static final int DISTANCE = 4;
-    public static final int RANGE = 20;
     private static final Minecraft mc = Minecraft.getMinecraft();
     private final int screenWidth;
     private final int screenHeight;
@@ -55,8 +54,6 @@ public class SnappingUtils extends DrawUtils {
             int hy = hud.getY();
             int hw = hud.getScaledWidth();
             int hh = hud.getScaledHeight();
-
-            if (hx + hw < x - RANGE || hx >= x + width + RANGE || hy + hh < y - RANGE || hy >= y + height + RANGE) continue;
 
             edgeXs.add(hx);
             edgeXs.add(hx + hw);

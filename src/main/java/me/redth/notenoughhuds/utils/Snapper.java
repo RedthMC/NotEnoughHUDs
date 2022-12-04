@@ -1,8 +1,8 @@
 package me.redth.notenoughhuds.utils;
 
 import me.redth.notenoughhuds.NotEnoughHUDs;
+import me.redth.notenoughhuds.gui.EditorScreen;
 import me.redth.notenoughhuds.hud.BaseHud;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 
 import java.util.LinkedHashSet;
@@ -11,46 +11,37 @@ import java.util.Set;
 public class Snapper extends DrawUtils {
     public static final int LINE_COLOR = 0xFF00FFAA;
     public static final int DISTANCE = 4;
-    public static final int RANGE = 20;
-    private static final Minecraft mc = Minecraft.getMinecraft();
-    private final int screenWidth;
-    private final int screenHeight;
+    private static final NotEnoughHUDs neh = NotEnoughHUDs.getInstance();
+    private final EditorScreen screen;
     private final Set<Integer> edgeXs = new LinkedHashSet<>();
     private final Set<Integer> centerXs = new LinkedHashSet<>();
     private final Set<Integer> edgeYs = new LinkedHashSet<>();
     private final Set<Integer> centerYs = new LinkedHashSet<>();
-    private BaseHud current;
-    private int snappedX;
-    private int snappedY;
-    private int lineX;
-    private int lineY;
+    private int xOffset;
+    private int yOffset;
 
-    public Snapper(GuiScreen screen) {
-        screenWidth = screen.width;
-        screenHeight = screen.height;
-        snappedX = 0;
-        snappedY = 0;
-        lineX = -100;
-        lineY = -100;
+    public Snapper(EditorScreen screen) {
+        this.screen = screen;
     }
 
     public static boolean snapsWith(int pos, int snap) {
         return pos >= snap - DISTANCE && pos < snap + DISTANCE;
     }
 
-    public void setCurrent(BaseHud current) {
-        this.current = current;
+    public void onClick(int mouseX, int mouseY) {
+        xOffset = screen.dragging.getX() - mouseX;
+        yOffset = screen.dragging.getY() - mouseY;
 
         edgeXs.clear();
         centerXs.clear();
         edgeYs.clear();
         centerYs.clear();
 
-        centerXs.add(screenWidth / 2);
-        centerYs.add(screenHeight / 2);
+        centerXs.add(screen.width / 2);
+        centerYs.add(screen.height / 2);
 
-        for (BaseHud hud : NotEnoughHUDs.getInstance().hudManager.getEnabledHuds()) {
-            if (hud.equals(current)) continue;
+        for (BaseHud hud : neh.hudManager.getEnabledHuds()) {
+            if (hud.equals(screen.dragging)) continue;
 
             int hx = hud.getX();
             int hy = hud.getY();
@@ -65,96 +56,60 @@ public class Snapper extends DrawUtils {
             edgeYs.add(hy + hh);
             centerYs.add(hy + hh / 2);
         }
+
     }
 
-    public void updateSnaps(int x, int y) {
+    public int getSnappedX(int mouseX) {
+        mouseX += xOffset;
 
-        if (GuiScreen.isShiftKeyDown()) {
-            snappedX = x;
-            snappedY = y;
-            lineX = -100;
-            lineY = -100;
-            return;
-        }
+        if (GuiScreen.isShiftKeyDown()) return mouseX;
 
-        int width = current.getScaledWidth();
-        int height = current.getScaledHeight();
-        int curCenX = x + width / 2;
-        int curCenY = y + height / 2;
-
-        snappedX = -100;
+        int width = screen.dragging.getScaledWidth();
 
         for (int centerX : centerXs) {
-            if (snapsWith(x + width / 2, centerX)) {
-                snappedX = centerX - width / 2;
-                lineX = centerX;
-                break;
+            if (snapsWith(mouseX + width / 2, centerX)) {
+                return drawLineX(centerX, centerX - width / 2);
             }
         }
-        if (snappedX == -100) {
-            for (int edgeX : edgeXs) {
-                if (snapsWith(x, edgeX)) {
-                    snappedX = edgeX;
-                    lineX = edgeX;
-                    break;
-                }
-                if (snapsWith(x + width, edgeX)) {
-                    snappedX = edgeX - width;
-                    lineX = edgeX;
-                    break;
-                }
+        for (int edgeX : edgeXs) {
+            if (snapsWith(mouseX, edgeX)) {
+                return drawLineX(edgeX, edgeX);
             }
-        }
-        if (snappedX < 0 || snappedX + width >= mc.displayWidth) {
-            lineX = -100;
-        }
-        if (snappedX == -100) {
-            snappedX = x;
+            if (snapsWith(mouseX + width, edgeX)) {
+                return drawLineX(edgeX, edgeX - width);
+            }
         }
 
-        snappedY = -100;
+        return mouseX;
+    }
+
+    public int getSnappedY(int mouseY) {
+        mouseY += yOffset;
+
+        if (GuiScreen.isShiftKeyDown()) return mouseY;
+
+        int height = screen.dragging.getScaledHeight();
+
         for (int centerY : centerYs) {
-            if (snapsWith(y + height / 2, centerY)) {
-                snappedY = centerY - height / 2;
-                lineY = centerY;
-                break;
-            }
+            if (snapsWith(mouseY + height / 2, centerY)) return drawLineY(centerY, centerY - height / 2);
         }
-        if (snappedY == -100) {
-            for (int edgeY : edgeYs) {
-                if (snapsWith(y, edgeY)) {
-                    snappedY = edgeY;
-                    lineY = edgeY;
-                    break;
-                }
-                if (snapsWith(y + height, edgeY)) {
-                    snappedY = edgeY - height;
-                    lineY = edgeY;
-                    break;
-                }
-            }
+        for (int edgeY : edgeYs) {
+            if (snapsWith(mouseY, edgeY)) return drawLineY(edgeY, edgeY);
+            if (snapsWith(mouseY + height, edgeY)) return drawLineY(edgeY, edgeY - height);
         }
-        if (snappedY < 0 || snappedY + height >= mc.displayHeight) {
-            lineY = -100;
-        }
-        if (snappedY == -100) {
-            snappedY = y;
-        }
+
+        return mouseY;
     }
 
-    public int getSnappedX() {
-        return snappedX;
+    public int drawLineX(int lineX, int snapX) {
+        if (snapX >= 0 && snapX + screen.dragging.getScaledWidth() < screen.width)
+            drawVerticalLine(lineX, 0F, screen.height, LINE_COLOR);
+        return snapX;
     }
 
-    public int getSnappedY() {
-        return snappedY;
+    public int drawLineY(int lineY, int snapY) {
+        if (snapY >= 0 && snapY + screen.dragging.getScaledHeight() < screen.height)
+            drawHorizontalLine(0F, screen.width, lineY, LINE_COLOR);
+        return snapY;
     }
-
-    public void drawLines() {
-        if (GuiScreen.isShiftKeyDown()) return;
-
-        if (lineX != -100) drawVerticalLine(lineX, 0.0F, screenHeight, LINE_COLOR);
-        if (lineY != -100) drawHorizontalLine(0.0F, screenWidth, lineY, LINE_COLOR);
-    }
-
 }
