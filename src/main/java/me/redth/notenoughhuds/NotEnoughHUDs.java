@@ -4,15 +4,13 @@ import me.redth.notenoughhuds.config.NehCommand;
 import me.redth.notenoughhuds.config.NehConfig;
 import me.redth.notenoughhuds.gui.EditorScreen;
 import me.redth.notenoughhuds.hud.*;
+import me.redth.notenoughhuds.utils.HudManager;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
-import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
 import net.fabricmc.fabric.api.event.player.AttackEntityCallback;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.ingame.GenericContainerScreen;
-import net.minecraft.inventory.EnderChestInventory;
 import net.minecraft.util.ActionResult;
 
 public class NotEnoughHUDs implements ClientModInitializer {
@@ -23,7 +21,6 @@ public class NotEnoughHUDs implements ClientModInitializer {
     public NehConfig config;
     public ComboHud comboHud;
     public EffectHud effectHud;
-    public EnderchestHud enderchestHud;
     public KeystrokesHud keystrokesHud;
     public PingHud pingHud;
     public ReachHud reachHud;
@@ -49,7 +46,6 @@ public class NotEnoughHUDs implements ClientModInitializer {
         hudManager.register(comboHud = new ComboHud());
         hudManager.register(new CpsHud());
         hudManager.register(new DirectionHud());
-        hudManager.register(new EnderchestHud());
         hudManager.register(new InventoryHud());
         hudManager.register(effectHud = new EffectHud());
         hudManager.register(new FpsHud());
@@ -89,21 +85,17 @@ public class NotEnoughHUDs implements ClientModInitializer {
                 hud.tick();
             }
         });
+
         AttackEntityCallback.EVENT.register(((player, world, hand, entity, hitResult) -> {
             if (reachHud.isEnabled()) reachHud.updateReach(hitResult);
             return ActionResult.PASS;
         }));
-        ScreenEvents.AFTER_INIT.register((client, gui, width, height) -> {
-            if (gui instanceof GenericContainerScreen chest && chest.getScreenHandler().getInventory() instanceof EnderChestInventory inv) {
-                enderchestHud.onECUpdate(inv);
-            }
-        });
     }
 
     public static void onTimeUpdate() {
         if (instance.tpsHud.isEnabled()) instance.tpsHud.onTimeUpdate();
     }
 
-    // todo: cps, server, color picker, ec
+    // todo: cps, server, color picker
 
 }

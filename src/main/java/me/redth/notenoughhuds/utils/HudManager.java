@@ -1,4 +1,4 @@
-package me.redth.notenoughhuds;
+package me.redth.notenoughhuds.utils;
 
 import com.google.common.collect.Iterables;
 import com.google.gson.JsonArray;

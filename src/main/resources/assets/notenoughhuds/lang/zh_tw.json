@@ -70,5 +70,7 @@
   "setting.notenoughhuds.static_name_color": "靜態名稱顏色",
   "setting.notenoughhuds.use_status_ping": "使用狀態延遲",
   "setting.notenoughhuds.value_color": "值顏色",
-  "setting.notenoughhuds.vanilla": "原版"
+  "setting.notenoughhuds.vanilla": "原版",
+  "screen.notenoughhuds.reset_position": "重製座標",
+  "screen.notenoughhuds.disable": "§c停用"
 }

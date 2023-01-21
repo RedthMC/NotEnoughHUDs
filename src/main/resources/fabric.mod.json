@@ -1,9 +1,10 @@
 {
   "schemaVersion": 1,
   "id": "notenoughhuds",
-  "version": "alpha-1.0.3",
+  "version": "1.0.5",
   "name": "NotEnoughHUDs",
   "description": "Adds a variety of different HUDs to the game.",
+  "icon": "assets/notenoughhuds/textures/logo.png",
   "authors": [
     "Redth"
   ],
@@ -16,6 +17,9 @@
   "entrypoints": {
     "client": [
       "me.redth.notenoughhuds.NotEnoughHUDs"
+    ],
+    "modmenu": [
+      "me.redth.notenoughhuds.utils.ModMenuImpl"
     ]
   },
   "mixins": [

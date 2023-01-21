@@ -48,7 +48,7 @@ public abstract class OptionWidget extends ClickableWidget {
     public void renderButton(MatrixStack matrix, int mouseX, int mouseY, float delta) {
         if (hovered) fill(matrix, x, y, x + width, y + height, HOVERED);
         DrawUtils.drawOutline(matrix, resetButton, 0xFFFFFFFF);
-        drawTextWithShadow(matrix, mc.textRenderer, getMessage(), resetButton.getX() + resetButton.getWidth() + 2, y + 2, 0xFFFFFF);
+        drawTextWithShadow(matrix, mc.textRenderer, getMessage(), resetButton.getX() + resetButton.getWidth() + 2, y + height / 2 - 4, 0xFFFFFF);
         drawCenteredText(matrix, mc.textRenderer, "\u21B6", resetButton.getX() + resetButton.getWidth() / 2, resetButton.getY() + resetButton.getHeight() / 2 - 4, 0xFFFFFF);
         drawEditButton(matrix, mouseX, mouseY);
     }

@@ -22,9 +22,9 @@ public class DrawUtils extends DrawableHelper {
     public static final MinecraftClient mc = MinecraftClient.getInstance();
 
     public static void drawTransparentBackground(MatrixStack matrix, int x, int y, int w, int h) {
+        RenderSystem.setShaderTexture(0, TRANSPARENT);
         resetGl();
-        mc.getTextureManager().bindTexture(TRANSPARENT);
-        drawTexture(matrix, x, y, 0, 0, w, h, 2, 2);
+        drawTexture(matrix, x, y, 0, 0, 0, w, h, 8, 8);
         RenderSystem.disableBlend();
     }
 
@@ -128,10 +128,10 @@ public class DrawUtils extends DrawableHelper {
         return textShadow ? mc.textRenderer.drawWithShadow(matrix, text, x, y, textColor) : mc.textRenderer.draw(matrix, text, x, y, textColor);
     }
 
-    public void drawTexture(MatrixStack matrix, Identifier texture, int x, int y, int u, int v, int width, int height) {
+    public static void drawTexture(MatrixStack matrix, Identifier texture, int x, int y, int u, int v, int width, int height) {
         RenderSystem.setShaderTexture(0, texture);
         resetGl();
-        drawTexture(matrix, x, y, u, v, width, height);
+        drawTexture(matrix, x, y, 0, (float) u, (float) v, width, height, 256, 256);
         RenderSystem.disableBlend();
     }
 
