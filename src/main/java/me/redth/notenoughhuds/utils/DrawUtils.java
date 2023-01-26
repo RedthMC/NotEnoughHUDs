@@ -15,10 +15,7 @@ public class DrawUtils extends Gui {
     public static final Minecraft mc = Minecraft.getMinecraft();
 
     public static void drawTransparentBackground(int x, int y, int w, int h) {
-        resetGl();
-        mc.getTextureManager().bindTexture(TRANSPARENT);
-        drawModalRectWithCustomSizedTexture(x, y, 0, 0, w, h, 8, 8);
-        GlStateManager.disableBlend();
+        drawScaledTexture(TRANSPARENT, x, y, 0, 0, w, h, 8, 8);
     }
 
     public static void drawTransparentBackground(Rectangle rect) {
@@ -68,7 +65,7 @@ public class DrawUtils extends Gui {
         GlStateManager.disableBlend();
     }
 
-    public static void drawHorizontalLine(float x1, float x2, float y, int color) {
+    public static void drawCenteredHorizontalLine(float x1, float x2, float y, int color) {
         if (x2 < x1) {
             float f = x1;
             x1 = x2;
@@ -78,7 +75,7 @@ public class DrawUtils extends Gui {
         drawRect(x1, y - 0.5F, x2, y + 0.5F, color);
     }
 
-    public static void drawVerticalLine(float x, float y1, float y2, int color) {
+    public static void drawCenteredVerticalLine(float x, float y1, float y2, int color) {
         if (y2 < y1) {
             float f = y1;
             y1 = y2;
@@ -114,6 +111,7 @@ public class DrawUtils extends Gui {
         } else if (align == BaseHud.Alignment.RIGHT) {
             x -= mc.fontRendererObj.getStringWidth(text) - 1;
         }
+        if (((textColor >> 24) & 255) < 10) return (int) x + mc.fontRendererObj.getStringWidth(text);
         return mc.fontRendererObj.drawString(text, x, y, textColor, textShadow);
     }
 

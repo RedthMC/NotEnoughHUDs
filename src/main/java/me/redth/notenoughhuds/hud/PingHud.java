@@ -20,7 +20,7 @@ import java.net.InetAddress;
 
 public class PingHud extends TextHud {
     public final NehBoolean useStatusPing = new NehBoolean("use_status_ping", false);
-    public NetworkManager nm;
+    public static NetworkManager nm;
     public long nextPingTime;
 
     public PingHud() {
@@ -38,7 +38,7 @@ public class PingHud extends TextHud {
             long l = Minecraft.getSystemTime();
             if (l > nextPingTime) {
                 nextPingTime = l + 15000;
-                new Thread(this::ping).start();
+                new Thread(PingHud::ping).start();
             }
             return mc.getCurrentServerData() == null ? -1 : (int) mc.getCurrentServerData().pingToServer;
         }
@@ -50,7 +50,7 @@ public class PingHud extends TextHud {
 
     }
 
-    public void ping() {
+    public static void ping() {
         if (nm != null) {
             if (nm.isChannelOpen()) nm.processReceivedPackets();
             else nm.checkDisconnected();

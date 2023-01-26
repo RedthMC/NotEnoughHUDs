@@ -18,6 +18,7 @@ public class ColorWidget extends TextWidget {
     private final int hashtagWidth;
     private final NehColor option;
     private final Rectangle colorPicker;
+    private final Rectangle colorBox;
     private final SatXBr satXBr;
     private final HueSlider hueSlider;
     private final AlphaSlider alphaSlider;
@@ -32,6 +33,7 @@ public class ColorWidget extends TextWidget {
         colorPicker = new Rectangle(editBox.getX() + editBox.getWidth() + 4, editBox.getY() - 43, 62, 110);
         int i = colorPicker.getX() + 2;
         int j = colorPicker.getY() + 2;
+        colorBox = new Rectangle(editBox.getX() + editBox.getWidth() - 12, editBox.getY() + editBox.getHeight() / 2 - 6, 12, 12);
         satXBr = new SatXBr(i, j, 58, 58);
         hueSlider = new HueSlider(i, j + 62, 58, 6);
         alphaSlider = new AlphaSlider(i, j + 72, 58, 6);
@@ -41,8 +43,8 @@ public class ColorWidget extends TextWidget {
 
     @Override
     public void drawEditButton(Minecraft mc, int mouseX, int mouseY) {
-        DrawUtils.drawTransparentBackground(editBox);
-        DrawUtils.drawRect(editBox, option.asInt());
+        DrawUtils.drawTransparentBackground(colorBox);
+        DrawUtils.drawRect(colorBox, option.asInt());
 
         if (!textFieldFocused) return;
 

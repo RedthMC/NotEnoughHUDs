@@ -9,7 +9,7 @@
   "updateUrl": "https://github.com/RedthMC/NotEnoughHUDs/releases",
   "authorList": ["Redth"],
   "credits": "",
-  "logoFile": "",
+  "logoFile": "assets/notenoughhuds/textures/logo.png",
   "screenshots": [],
   "dependencies": []
 }

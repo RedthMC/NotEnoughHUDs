@@ -8,7 +8,6 @@ import io.netty.buffer.ByteBufInputStream;
 import io.netty.buffer.Unpooled;
 import io.netty.handler.codec.base64.Base64;
 import net.minecraft.client.multiplayer.ServerData;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.client.renderer.texture.TextureUtil;
 import net.minecraft.util.ResourceLocation;
@@ -54,7 +53,7 @@ public class ServerHud extends BaseHud {
     @Override
     public void render() {
         if (server == null) return;
-        drawBg(backgroundColor);
+        drawBackground(backgroundColor);
         int x = 2;
         int y = 2;
         drawScaledTexture(loaded ? ICON : UNKNOWN, x, y, 0.0F, 0.0F, 32, 32, 32.0F, 32.0F);

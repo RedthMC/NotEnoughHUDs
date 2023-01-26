@@ -45,7 +45,7 @@ public class DirectionHud extends BaseHud {
     public void render() {
         GlStateManager.pushMatrix();
         GlStateManager.translate(0.0F, 0.0F, 20.0F);
-        drawBg(backgroundColor);
+        drawBackground(backgroundColor);
         GlStateManager.depthFunc(GL11.GL_EQUAL);
         float x1 = width / 2.0F;
 
@@ -53,7 +53,7 @@ public class DirectionHud extends BaseHud {
         float longs = height / 2.0F;
         float shorts = height / 4.0F;
         for (float f : lines) {
-            drawVerticalLine(x1 + f, 0, isLong ? longs : shorts, 0xFFAAAAAA);
+            drawCenteredVerticalLine(x1 + f, 0, isLong ? longs : shorts, 0xFFAAAAAA);
             isLong = !isLong;
         }
 
@@ -65,7 +65,7 @@ public class DirectionHud extends BaseHud {
         }
 
         GlStateManager.depthFunc(GL11.GL_LEQUAL);
-        drawVerticalLine(x1, 0, height, 0xFFFF5555);
+        drawCenteredVerticalLine(x1, 0, height, 0xFFFF5555);
         GlStateManager.popMatrix();
     }
 

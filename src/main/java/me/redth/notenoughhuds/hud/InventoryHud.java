@@ -11,7 +11,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public class InventoryHud extends BaseHud {
-    public final ResourceLocation CONTAINER_GUI = new ResourceLocation("notenoughhuds", "textures/container.png");
+    public final ResourceLocation CONTAINER_GUI = new ResourceLocation("notenoughhuds", "textures/inventory.png");
     public final NehBoolean showBg = new NehBoolean("show_background", true);
     private List<ItemStack> inventory = null;
 
@@ -22,7 +22,7 @@ public class InventoryHud extends BaseHud {
 
     @Override
     public void render() {
-        if (showBg.get()) drawTexture(CONTAINER_GUI, 0, 0, 0, 0, 176, 67);
+        if (showBg.get()) drawScaledTexture(CONTAINER_GUI, 0, 0, 0, 0, 176, 67, 176, 67);
 
         if (inventory == null) return;
 

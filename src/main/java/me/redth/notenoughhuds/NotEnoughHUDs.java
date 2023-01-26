@@ -29,11 +29,10 @@ public class NotEnoughHUDs {
     public boolean showScreen;
     public HudManager hudManager;
     public NehConfig config;
-    public EnderChestHud ecHud;
-    public PackHud packHud;
+//    public PackHud packHud;
     public PingHud pingHud;
     public ReachHud reachHud;
-    public ServerHud serverHud;
+//    public ServerHud serverHud;
     public SprintHud sprintHud;
     public TpsHud tpsHud;
 
@@ -60,12 +59,12 @@ public class NotEnoughHUDs {
         hudManager.register(new FpsHud());
         hudManager.register(new KeystrokesHud());
         hudManager.register(new InventoryHud());
-        hudManager.register(ecHud = new EnderChestHud());
-        hudManager.register(packHud = new PackHud());
+//        hudManager.register(packHud = new PackHud());
         hudManager.register(pingHud = new PingHud());
         hudManager.register(reachHud = new ReachHud());
         hudManager.register(new ScoreboardHud());
-        hudManager.register(serverHud = new ServerHud());
+//        hudManager.register(serverHud = new ServerHud());
+        hudManager.register(new SpeedHud());
         hudManager.register(new TimeHud());
         hudManager.register(new TextHud());
         hudManager.register(sprintHud = new SprintHud());
@@ -73,7 +72,7 @@ public class NotEnoughHUDs {
 
         config.load();
 
-        ((IReloadableResourceManager) mc.getResourceManager()).registerReloadListener(packHud);
+//        ((IReloadableResourceManager) mc.getResourceManager()).registerReloadListener(packHud);
     }
 
 
@@ -129,12 +128,12 @@ public class NotEnoughHUDs {
         CpsHud.updateCps(e);
     }
 
-    @SubscribeEvent
-    public void onInitGui(GuiScreenEvent.InitGuiEvent.Post e) {
-        if (ecHud.isEnabled()) {
-            ecHud.onInitGui(e);
-        }
-    }
+//    @SubscribeEvent
+//    public void onInitGui(GuiScreenEvent.InitGuiEvent.Post e) {
+//        if (ecHud.isEnabled()) {
+//            ecHud.onInitGui(e);
+//        }
+//    }
 
     @SubscribeEvent
     public void onHitEntity(AttackEntityEvent e) {
@@ -142,5 +141,5 @@ public class NotEnoughHUDs {
             reachHud.updateReach(e);
     }
 
-    //todo: snapping
+    // todo: color picker, bossbar, tab, item update
 }

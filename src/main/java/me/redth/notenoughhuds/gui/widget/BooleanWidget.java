@@ -26,10 +26,10 @@ public class BooleanWidget extends OptionWidget {
 
     @Override
     public void drawEditButton(Minecraft mc, int mouseX, int mouseY) {
-        int x1 = editBox.getX() + editBox.getWidth() - 10;
-        int y1 = editBox.getY() + editBox.getHeight() / 2 - 5;
-        DrawUtils.drawOutline(x1, y1, x1 + 10, y1 + 10, 0xFFFFFFFF);
-        if (value) drawRect(x1 + 2, y1 + 2, x1 + 8, y1 + 8, 0xFFFFFFFF);
+        int x1 = editBox.getX() + editBox.getWidth() - 12;
+        int y1 = editBox.getY() + editBox.getHeight() / 2 - 6;
+        DrawUtils.drawOutline(x1, y1, x1 + 12, y1 + 12, 0xFFFFFFFF);
+        if (value) drawRect(x1 + 2, y1 + 2, x1 + 10, y1 + 10, 0xFFFFFFFF);
     }
 
 

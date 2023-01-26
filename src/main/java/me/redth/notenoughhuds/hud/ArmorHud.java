@@ -17,7 +17,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
-import java.util.function.Function;
 
 public class ArmorHud extends BaseHud {
     public static final List<ItemStack> ARMORS = ImmutableList.of(new ItemStack(Items.diamond_helmet), new ItemStack(Items.diamond_chestplate), new ItemStack(Items.diamond_leggings), new ItemStack(Items.diamond_boots));
@@ -44,13 +43,13 @@ public class ArmorHud extends BaseHud {
 
     public static int getDurabilityColor(ItemStack item) {
         int i = (int) Math.round(item.getItem().getDurabilityForDisplay(item) * 255.0D);
-        return i << 16 | (255 - i) << 8;
+        return (i << 16 | (255 - i) << 8) | 0xFF000000;
     }
 
     @Override
     public void render() {
         if (items.isEmpty()) return;
-        drawBg(backgroundColor);
+        drawBackground(backgroundColor);
 
         int y = 1;
         int iconX;

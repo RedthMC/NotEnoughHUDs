@@ -7,6 +7,7 @@ import me.redth.notenoughhuds.config.option.NehEnum;
 import me.redth.notenoughhuds.config.option.NehInteger;
 import me.redth.notenoughhuds.config.option.NehOption;
 import me.redth.notenoughhuds.gui.EditorScreen;
+import me.redth.notenoughhuds.gui.HudsScreen;
 import me.redth.notenoughhuds.gui.SettingsScreen;
 import me.redth.notenoughhuds.utils.DrawUtils;
 import net.minecraft.client.renderer.GlStateManager;
@@ -27,7 +28,7 @@ public abstract class BaseHud extends DrawUtils {
     public final NehEnum verAlign = new NehEnum("vertical_alignment", Alignment.TOP);
     public final NehInteger xOffset = new NehInteger("x_offset", 0, -32767, 32767);
     public final NehInteger yOffset = new NehInteger("y_offset", 60, -32767, 32767);
-    public final NehInteger scale = new NehInteger("scale", 100, 50, 200, i -> i + "%");
+    public final NehInteger scalePercent = new NehInteger("scale", 100, 50, 200, i -> i + "%");
     private int x;
     private int y;
     protected int width;
@@ -36,7 +37,7 @@ public abstract class BaseHud extends DrawUtils {
     protected int scaledHeight;
 
     public static boolean isEditing() {
-        return mc.currentScreen instanceof EditorScreen || mc.currentScreen instanceof SettingsScreen;
+        return mc.currentScreen instanceof EditorScreen || mc.currentScreen instanceof SettingsScreen || mc.currentScreen instanceof HudsScreen;
     }
 
     public boolean isEnabled() {
@@ -63,18 +64,18 @@ public abstract class BaseHud extends DrawUtils {
         options.add(verAlign.hidden());
         options.add(xOffset.hidden());
         options.add(yOffset.hidden());
-        options.add(scale);
+        options.add(scalePercent);
     }
 
-    public float scaled() {
-        return scale.get() / 100.0F;
+    public float getScale() {
+        return scalePercent.get() / 100.0F;
     }
 
     public void tick() {
         width = getWidth();
         height = getHeight();
-        scaledWidth = (int) (width * scaled());
-        scaledHeight = (int) (height * scaled());
+        scaledWidth = (int) (width * getScale());
+        scaledHeight = (int) (height * getScale());
 
         x = xOffset.get();
         if (horAlign.get() == Alignment.CENTER) x += (screenWidth - scaledWidth) / 2;
@@ -109,14 +110,13 @@ public abstract class BaseHud extends DrawUtils {
         }
         GlStateManager.pushMatrix();
         GlStateManager.translate(x1, y1, 0.0F);
-        GlStateManager.scale(scaled(), scaled(), 1.0F);
+        GlStateManager.scale(getScale(), getScale(), 1.0F);
         render();
         GlStateManager.popMatrix();
     }
 
     public void renderScaled() {
         render(x, y, false);
-        if (isEditing()) drawOutline(x, y, x + scaledWidth, y + scaledHeight, 0.5F, 0xFF00FF00);
     }
 
     public void renderPlaceholder(int x, int y) {
@@ -161,25 +161,20 @@ public abstract class BaseHud extends DrawUtils {
         }
     }
 
-    public void resetPosition() {
-        xOffset.reset();
-        yOffset.reset();
-        horAlign.reset();
-        verAlign.reset();
-        scale.reset();
+    public void reset() {
+        for (NehOption<?> option : options) {
+            option.reset();
+        }
     }
 
-    public void drawPad(int color) {
-        drawRect(x, y, x + scaledWidth, y + scaledHeight, color);
+    public void drawOutline(int color) {
+        drawOutline(x, y, x + scaledWidth, y + scaledHeight, color);
     }
 
-    public void drawPad(int x, int y, int color) {
+    protected void drawBackground(NehColor backgroundColor) {
+        int color = backgroundColor.asInt();
         if ((color >> 24 & 255) == 0) return;
-        drawRect(x, y, x + width, y + height, color);
-    }
-
-    protected void drawBg(NehColor backgroundColor) {
-        drawPad(0, 0, backgroundColor.asInt());
+        drawRect(0, 0, width, height, color);
     }
 
     public enum Alignment implements NehEnum.EnumType {

@@ -43,7 +43,7 @@ public class CoordsHud extends BaseHud {
 
     @Override
     public void render() {
-        drawBg(backgroundColor);
+        drawBackground(backgroundColor);
         int x = 2;
         int y = 2;
         for (Pair<String, String> entry : lines) {

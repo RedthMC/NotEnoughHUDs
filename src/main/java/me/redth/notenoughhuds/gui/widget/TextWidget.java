@@ -397,14 +397,14 @@ public abstract class TextWidget extends OptionWidget {
             y1 = y2;
             y2 = j;
         }
-//        int k = editBox.getX() + editBox.getWidth();
-//        if (x2 > k) {
-//            x2 = k;
-//        }
-//
-//        if (x1 > k) {
-//            x1 = k;
-//        }
+        int k = editBox.getX() + editBox.getWidth();
+        if (x2 > k) {
+            x2 = k;
+        }
+
+        if (x1 > k) {
+            x1 = k;
+        }
 
         Tessellator tessellator = Tessellator.getInstance();
         WorldRenderer worldrenderer = tessellator.getWorldRenderer();

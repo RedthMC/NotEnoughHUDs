@@ -9,8 +9,8 @@ public class SprintHud extends BaseHud {
     public final NehBoolean toggleSprint = new NehBoolean("toggle_sprint", true);
     public final NehColor textColor = new NehColor("text_color", "FFFFFFFF");
     public final NehBoolean textShadow = new NehBoolean("text_shadow", true);
-    public final NehString vanilla = new NehString("vanilla", "Sprinting [Vanilla]");
-    public final NehString toggled = new NehString("toggled", "Sprinting [Toggled]");
+    public final NehString normal = new NehString("sprint_normal", "Sprinting [Vanilla]");
+    public final NehString toggled = new NehString("sprint_toggled", "Sprinting [Toggled]");
     private final KeyBinding sprintKey;
     private boolean sprintToggled;
 
@@ -19,7 +19,7 @@ public class SprintHud extends BaseHud {
         options.add(toggleSprint);
         options.add(textColor);
         options.add(textShadow);
-        options.add(vanilla);
+        options.add(normal);
         options.add(toggled);
         sprintKey = mc.gameSettings.keyBindSprint;
     }
@@ -55,7 +55,7 @@ public class SprintHud extends BaseHud {
 
     private String getText() {
         if (isEditing() || sprintToggled) return toggled.get();
-        return mc.thePlayer != null && mc.thePlayer.isSprinting() ? vanilla.get() : "";
+        return mc.thePlayer != null && mc.thePlayer.isSprinting() ? normal.get() : "";
     }
 
 }

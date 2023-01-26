@@ -3,6 +3,7 @@ package me.redth.notenoughhuds.gui;
 import com.google.common.collect.ImmutableList;
 import me.redth.notenoughhuds.NotEnoughHUDs;
 import me.redth.notenoughhuds.hud.BaseHud;
+import me.redth.notenoughhuds.utils.DrawUtils;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
@@ -17,7 +18,8 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 public class EditorScreen extends GuiScreen {
-    public static final int HOVERING_COLOR = 0x80FFFFFF;
+    public static final int HOVERING_LINE = 0xFF00FFFF;
+    public static final int LINE_COLOR = 0xFFFF8000;
     private static final NotEnoughHUDs neh = NotEnoughHUDs.getInstance();
     private final GuiScreen parent;
     public BaseHud hovering;
@@ -41,15 +43,15 @@ public class EditorScreen extends GuiScreen {
     @Override
     public void initGui() {
         Keyboard.enableRepeatEvents(true);
-        buttonList.add(new GuiButtonExt(0, width / 2 - 100, height / 2 + 12, 200, 20, "Settings"));
-        buttonList.add(new GuiButtonExt(1, width / 2 - 100, height / 2 + 34, 200, 20, "Back"));
+        buttonList.add(new GuiButtonExt(0, width / 2 - 100, height / 2 + 12, 200, 20, "HUDs"));
+        buttonList.add(new GuiButtonExt(1, width / 2 - 100, height / 2 + 34, 200, 20, "Done"));
     }
 
     @Override
     protected void actionPerformed(GuiButton button) {
         switch (button.id) {
             case 0:
-                mc.displayGuiScreen(new SettingsScreen(this));
+                mc.displayGuiScreen(new HudsScreen(this)); // *
                 break;
             case 1:
                 mc.displayGuiScreen(parent);
@@ -67,17 +69,17 @@ public class EditorScreen extends GuiScreen {
     public void drawScreen(int mouseX, int mouseY, float delta) {
         hovering = null;
         for (BaseHud hud : neh.hudManager.getEnabledHuds()) {
+            hud.drawOutline(LINE_COLOR);
             if (hud.getX() <= mouseX && mouseX < hud.getX() + hud.getScaledWidth() && hud.getY() <= mouseY && mouseY < hud.getY() + hud.getScaledHeight()) {
                 hovering = hud;
-                break;
             }
         }
         if (dragging != null) {
             dragging.setX(getSnappedX(mouseX));
             dragging.setY(getSnappedY(mouseY));
-            dragging.drawPad(HOVERING_COLOR);
+            dragging.drawOutline(HOVERING_LINE);
         } else if (hovering != null) {
-            hovering.drawPad(HOVERING_COLOR);
+            hovering.drawOutline(HOVERING_LINE);
             drawHoveringText(ImmutableList.of(I18n.format(hovering.getTranslationKey())), mouseX, mouseY);
             GlStateManager.disableLighting();
         }
@@ -213,13 +215,13 @@ public class EditorScreen extends GuiScreen {
 
     public int drawLineX(int lineX, int snapX) {
         if (snapX >= 0 && snapX + dragging.getScaledWidth() < width)
-            drawVerticalLine(lineX, 0, height, 0xFF00FFAA);
+            DrawUtils.drawCenteredVerticalLine(lineX, 0, height, LINE_COLOR);
         return snapX;
     }
 
     public int drawLineY(int lineY, int snapY) {
         if (snapY >= 0 && snapY + dragging.getScaledHeight() < height)
-            drawHorizontalLine(0, width, lineY, 0xFF00FFAA);
+            DrawUtils.drawCenteredHorizontalLine(0, width, lineY, LINE_COLOR);
         return snapY;
     }
 }

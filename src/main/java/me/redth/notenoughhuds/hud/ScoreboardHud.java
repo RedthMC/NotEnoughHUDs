@@ -90,9 +90,9 @@ public class ScoreboardHud extends BaseHud {
     @Override
     public void render() {
         if (objective == null) return;
-        drawBg(backgroundColor);
+        drawBackground(backgroundColor);
 
-        drawString(objective.getDisplayName(), width / 2.0F, 1, 0xFFFFFF, textShadow.get(), Alignment.CENTER);
+        drawString(objective.getDisplayName(), width / 2.0F, 1, 0xFFFFFFFF, textShadow.get(), Alignment.CENTER);
 
         int y = 10;
 
@@ -100,7 +100,7 @@ public class ScoreboardHud extends BaseHud {
         for (Score score : scores) {
             ScorePlayerTeam team = sb.getPlayersTeam(score.getPlayerName());
             String s = ScorePlayerTeam.formatPlayerName(team, score.getPlayerName());
-            drawString(s, 2, y, 0xFFFFFF, textShadow.get());
+            drawString(s, 2, y, 0xFFFFFFFF, textShadow.get());
 
             if (showNumbers.get()) {
                 drawString(String.valueOf(score.getScorePoints()), width - 2, y, numberColor.asInt(), textShadow.get(), Alignment.RIGHT);
@@ -118,6 +118,7 @@ public class ScoreboardHud extends BaseHud {
             ScorePlayerTeam spt = objective.getScoreboard().getPlayersTeam(score.getPlayerName());
             String s = ScorePlayerTeam.formatPlayerName(spt, score.getPlayerName());
             if (showNumbers.get()) s += ": " + score.getScorePoints();
+
             int j = mc.fontRendererObj.getStringWidth(s);
             if (i < j) i = j;
         }

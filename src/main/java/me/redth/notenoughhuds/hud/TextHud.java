@@ -54,7 +54,7 @@ public class TextHud extends BaseHud {
     @Override
     public void render() {
         if (showBg.get()) {
-            drawBg(backgroundColor);
+            drawBackground(backgroundColor);
             drawString(text, getWidth() / 2.0f, getHeight() / 2.0f - 4, textColor.asInt(), textShadow.get(), Alignment.CENTER);
         } else {
             drawString(text, 1, 0, textColor.asInt(), textShadow.get());

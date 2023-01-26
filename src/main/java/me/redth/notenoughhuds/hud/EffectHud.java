@@ -55,7 +55,7 @@ public class EffectHud extends BaseHud {
     @Override
     public void render() {
         if (effects.isEmpty()) return;
-        drawBg(backgroundColor);
+        drawBackground(backgroundColor);
 
         if (showName.get()) {
             int y = 2;
@@ -72,12 +72,11 @@ public class EffectHud extends BaseHud {
                 align = Alignment.LEFT;
             }
             for (PotionEffect effect : effects) {
-                int color = staticNameColor.get() ? nameOrAmpColor.asInt() : getPotionFromEffect(effect).getLiquidColor();
                 String name = getContacted(effect);
                 String duration = Potion.getDurationString(effect);
 
                 drawIcon(iconX, y, effect);
-                drawString(name, textX, y, color, textShadow.get(), align);
+                drawString(name, textX, y, getColor(effect), textShadow.get(), align);
                 drawString(duration, textX, y + 10, durationColor.asInt(), textShadow.get(), align);
                 y += 20;
             }
@@ -85,15 +84,18 @@ public class EffectHud extends BaseHud {
             int x = 7;
 
             for (PotionEffect effect : effects) {
-                int color = staticNameColor.get() ? nameOrAmpColor.asInt() : getPotionFromEffect(effect).getLiquidColor();
                 String duration = Potion.getDurationString(effect);
 
                 drawIcon(x, 3, effect);
-                drawString(amplifierToString(effect.getAmplifier()), x + 23, 12, color, textShadow.get(), Alignment.RIGHT);
+                drawString(amplifierToString(effect.getAmplifier()), x + 23, 12, getColor(effect), textShadow.get(), Alignment.RIGHT);
                 drawString(duration, x + 9, 22, durationColor.asInt(), textShadow.get(), Alignment.CENTER);
                 x += 28;
             }
         }
+    }
+
+    protected int getColor(PotionEffect effect) {
+        return staticNameColor.get() ? nameOrAmpColor.asInt() : (getPotionFromEffect(effect).getLiquidColor() | 0xFF000000);
     }
 
     @Override

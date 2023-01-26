@@ -3,7 +3,6 @@ package me.redth.notenoughhuds.hud;
 import com.google.common.collect.Lists;
 import me.redth.notenoughhuds.config.option.NehBoolean;
 import me.redth.notenoughhuds.config.option.NehColor;
-import me.redth.notenoughhuds.utils.NehUtils;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.client.resources.IResourceManagerReloadListener;
@@ -33,7 +32,7 @@ public class PackHud extends BaseHud implements IResourceManagerReloadListener {
     @Override
     public void render() {
         if (packs.isEmpty()) return;
-        drawBg(backgroundColor);
+        drawBackground(backgroundColor);
         int x = 2;
         int y = 2;
         for (ResourcePackRepository.Entry pack : packs) {
@@ -49,13 +48,19 @@ public class PackHud extends BaseHud implements IResourceManagerReloadListener {
             drawModalRectWithCustomSizedTexture(x, y, 0.0F, 0.0F, 32, 32, 32.0F, 32.0F);
             GlStateManager.disableBlend();
             x += 34;
-            drawString(NehUtils.shrinkWithEllipse(pack.getResourcePackName(), 156), x, y + 1, 0xFFFFFF, textShadow.get());
+            drawString(shrinkWithEllipse(pack.getResourcePackName(), 156), x, y + 1, 0xFFFFFFFF, textShadow.get());
 
             List<String> desc = mc.fontRendererObj.listFormattedStringToWidth(pack.getTexturePackDescription(), 156);
 
-            if (desc.size() > 0) drawString(desc.get(0), x, y + 11, 0xFFFFFF, textShadow.get());
-            if (desc.size() > 1) drawString(desc.get(1), x, y + 21, 0xFFFFFF, textShadow.get());
+            if (desc.size() > 0) drawString(desc.get(0), x, y + 11, 0xFFFFFFFF, textShadow.get());
+            if (desc.size() > 1) drawString(desc.get(1), x, y + 21, 0xFFFFFFFF, textShadow.get());
         }
+    }
+
+    public static String shrinkWithEllipse(String text, int width) {
+        if (mc.fontRendererObj.getStringWidth(text) < width) return text;
+        text = mc.fontRendererObj.trimStringToWidth(text, width - mc.fontRendererObj.getStringWidth("..."));
+        return text + "...";
     }
 
     @Override
