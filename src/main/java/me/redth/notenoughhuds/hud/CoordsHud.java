@@ -50,7 +50,7 @@ public class CoordsHud extends BaseHud {
 
     @Override
     public void render(MatrixStack matrix) {
-        drawBg(matrix, backgroundColor);
+        drawBackground(matrix, backgroundColor);
         int y = 2;
         y = drawLine(matrix, "X: ", posX, y);
         y = drawLine(matrix, "Y: ", posY, y);

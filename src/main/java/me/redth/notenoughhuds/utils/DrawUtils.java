@@ -22,10 +22,7 @@ public class DrawUtils extends DrawableHelper {
     public static final MinecraftClient mc = MinecraftClient.getInstance();
 
     public static void drawTransparentBackground(MatrixStack matrix, int x, int y, int w, int h) {
-        RenderSystem.setShaderTexture(0, TRANSPARENT);
-        resetGl();
-        drawTexture(matrix, x, y, 0, 0, 0, w, h, 8, 8);
-        RenderSystem.disableBlend();
+        drawTexture(matrix, TRANSPARENT, x, y, 0, 0, w, h, 4, 4);
     }
 
     public static void drawTransparentBackground(MatrixStack matrix, Rect2i rect) {
@@ -68,7 +65,7 @@ public class DrawUtils extends DrawableHelper {
         RenderSystem.disableBlend();
     }
 
-    public static void drawHorizontalLine(MatrixStack matrix, float x1, float x2, float y, int color) {
+    public static void drawCenteredHorizontalLine(MatrixStack matrix, float x1, float x2, float y, int color) {
         if (x2 < x1) {
             float f = x1;
             x1 = x2;
@@ -78,7 +75,7 @@ public class DrawUtils extends DrawableHelper {
         fill(matrix, x1, y - 0.5F, x2, y + 0.5F, color);
     }
 
-    public static void drawVerticalLine(MatrixStack matrix, float x, float y1, float y2, int color) {
+    public static void drawCenteredVerticalLine(MatrixStack matrix, float x, float y1, float y2, int color) {
         if (y2 < y1) {
             float f = y1;
             y1 = y2;
@@ -93,11 +90,11 @@ public class DrawUtils extends DrawableHelper {
         drawOutline(matrix, rect.getX(), rect.getY(), rect.getX() + rect.getWidth(), rect.getY() + rect.getHeight(), color);
     }
 
-    public static void drawOutline(MatrixStack matrix, float x1, float y1, float x2, float y2, int color) {
-        fill(matrix, x1, y1, x2 - 1.0F, y1 + 1.0F, color);
-        fill(matrix, x2 - 1.0F, y1, x2, y2 - 1.0F, color);
-        fill(matrix, x1 + 1.0F, y2 - 1.0F, x2, y2, color);
-        fill(matrix, x1, y1 + 1.0F, x1 + 1.0F, y2, color);
+    public static void drawOutline(MatrixStack matrix, int x1, int y1, int x2, int y2, int color) {
+        fill(matrix, x1, y1, x2 - 1, y1 + 1, color);
+        fill(matrix, x2 - 1, y1, x2, y2 - 1, color);
+        fill(matrix, x1 + 1, y2 - 1, x2, y2, color);
+        fill(matrix, x1, y1 + 1, x1 + 1, y2, color);
     }
 
 
@@ -116,6 +113,7 @@ public class DrawUtils extends DrawableHelper {
         } else if (align == BaseHud.Alignment.RIGHT) {
             x -= mc.textRenderer.getWidth(text) - 1;
         }
+        if (((textColor >> 24) & 0xFF) < 4) return (int) x + mc.textRenderer.getWidth(text) + (textShadow ? 1 : 0);
         return textShadow ? mc.textRenderer.drawWithShadow(matrix, text, x, y, textColor) : mc.textRenderer.draw(matrix, text, x, y, textColor);
     }
 
@@ -128,10 +126,10 @@ public class DrawUtils extends DrawableHelper {
         return textShadow ? mc.textRenderer.drawWithShadow(matrix, text, x, y, textColor) : mc.textRenderer.draw(matrix, text, x, y, textColor);
     }
 
-    public static void drawTexture(MatrixStack matrix, Identifier texture, int x, int y, int u, int v, int width, int height) {
+    public static void drawTexture(MatrixStack matrix, Identifier texture, int x, int y, int u, int v, int width, int height, int textureWidth, int textureHeight) {
         RenderSystem.setShaderTexture(0, texture);
         resetGl();
-        drawTexture(matrix, x, y, 0, (float) u, (float) v, width, height, 256, 256);
+        drawTexture(matrix, x, y, 0, (float) u, (float) v, width, height, textureWidth, textureHeight);
         RenderSystem.disableBlend();
     }
 

@@ -74,7 +74,7 @@ public class ScoreboardHud extends BaseHud {
     @Override
     public void render(MatrixStack matrix) {
         if (objective == null) return;
-        drawBg(matrix, backgroundColor);
+        drawBackground(matrix, backgroundColor);
         int y = getHeight() - 9;
         int width = getWidth();
         Scoreboard sb = objective.getScoreboard();
@@ -82,7 +82,7 @@ public class ScoreboardHud extends BaseHud {
         for (ScoreboardPlayerScore score : scores) {
             Team team = sb.getPlayerTeam(score.getPlayerName());
             Text text = Team.decorateName(team, Text.of(score.getPlayerName()));
-            drawText(matrix, text, 2, y, 0xFFFFFF, textShadow.get());
+            drawText(matrix, text, 2, y, 0xFFFFFFFF, textShadow.get());
 
             if (showNumbers.get()) {
                 drawString(matrix, String.valueOf(score.getScore()), width - 2, y, numberColor.asColor(), textShadow.get(), Alignment.RIGHT);
@@ -91,7 +91,7 @@ public class ScoreboardHud extends BaseHud {
             y -= 9;
         }
 
-        drawText(matrix, objective.getDisplayName(), width / 2.0F, y, 0xFFFFFF, textShadow.get(), Alignment.CENTER);
+        drawText(matrix, objective.getDisplayName(), width / 2.0F, y, 0xFFFFFFFF, textShadow.get(), Alignment.CENTER);
     }
 
     @Override

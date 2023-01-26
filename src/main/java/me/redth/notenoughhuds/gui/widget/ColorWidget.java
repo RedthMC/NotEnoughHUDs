@@ -18,6 +18,7 @@ import java.awt.Color;
 
 public class ColorWidget extends TextWidget {
     private final NehColor option;
+    private final Rect2i colorBox;
     private final Rect2i colorPicker;
     private final SatXBr satXBr;
     private final HueSlider hueSlider;
@@ -32,6 +33,7 @@ public class ColorWidget extends TextWidget {
         colorPicker = new Rect2i(editBox.getX() + editBox.getWidth() + 4, editBox.getY() - 43, 62, 110);
         int i = colorPicker.getX() + 2;
         int j = colorPicker.getY() + 2;
+        colorBox = new Rect2i(editBox.getX() + editBox.getWidth() - 12, editBox.getY() + editBox.getHeight() / 2 - 6, 12, 12);
         satXBr = new SatXBr(i, j, 58, 58);
         hueSlider = new HueSlider(i, j + 62, 58, 6);
         alphaSlider = new AlphaSlider(i, j + 72, 58, 6);
@@ -41,8 +43,8 @@ public class ColorWidget extends TextWidget {
 
     @Override
     public void drawEditButton(MatrixStack matrix, int mouseX, int mouseY) {
-        DrawUtils.drawTransparentBackground(matrix, editBox);
-        DrawUtils.fill(matrix, editBox, option.asColor());
+        DrawUtils.drawTransparentBackground(matrix, colorBox);
+        DrawUtils.fill(matrix, colorBox, option.asColor());
 
         if (isFocused()) {
             DrawUtils.fill(matrix, colorPicker, 0xFF121212);
@@ -125,15 +127,11 @@ public class ColorWidget extends TextWidget {
                 setSelectionStart(tr.trimToWidth(text, i).length());
                 updateColor();
             } else {
-                if (alphaSlider.isHovered(mouseX, mouseY))
-                    dragging = alphaSlider;
-                else if (chromaBox.contains(mouseX, mouseY))
-                    option.chroma = !option.chroma;
+                if (alphaSlider.isHovered(mouseX, mouseY)) dragging = alphaSlider;
+                else if (chromaBox.contains(mouseX, mouseY)) option.chroma = !option.chroma;
                 else if (option.chroma) {
-                } else if (hueSlider.isHovered(mouseX, mouseY))
-                    dragging = hueSlider;
-                else if (satXBr.isHovered(mouseX, mouseY))
-                    dragging = satXBr;
+                } else if (hueSlider.isHovered(mouseX, mouseY)) dragging = hueSlider;
+                else if (satXBr.isHovered(mouseX, mouseY)) dragging = satXBr;
             }
         } else {
             updateColor();

@@ -8,7 +8,7 @@ import net.minecraft.util.Identifier;
 import java.util.List;
 
 public class InventoryHud extends ItemHud {
-    public static final Identifier CONTAINER_GUI = new Identifier("notenoughhuds", "textures/container.png");
+    public static final Identifier CONTAINER_GUI = new Identifier("notenoughhuds", "textures/inventory.png");
     public final NehBoolean showBackground = new NehBoolean("show_background", true);
     private List<ItemStack> inventory = null;
 
@@ -19,7 +19,7 @@ public class InventoryHud extends ItemHud {
 
     @Override
     public void render(MatrixStack matrix) {
-        if (showBackground.get()) drawTexture(matrix, CONTAINER_GUI, 0, 0, 0, 0, 176, 67);
+        if (showBackground.get()) drawTexture(matrix, CONTAINER_GUI, 0, 0, 0, 0, 176, 67, 176, 67);
         if (inventory == null) return;
         int x = 8;
         int y = 7;

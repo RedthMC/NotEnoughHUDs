@@ -44,7 +44,7 @@ public class ArmorHud extends ItemHud {
     @Override
     public void render(MatrixStack matrix) {
         if (items.isEmpty()) return;
-        drawBg(matrix, backgroundColor);
+        drawBackground(matrix, backgroundColor);
 
 
         int y = 1;

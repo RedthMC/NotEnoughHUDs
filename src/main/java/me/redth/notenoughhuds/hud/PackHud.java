@@ -32,7 +32,7 @@ public class PackHud extends BaseHud {
     @Override
     public void render(MatrixStack matrix) {
         if (packs.isEmpty()) return;
-        drawBg(matrix,backgroundColor);
+        drawBackground(matrix,backgroundColor);
         int x = 2;
         int y = 2;
         for (ResourcePackProfile pack : packs) {

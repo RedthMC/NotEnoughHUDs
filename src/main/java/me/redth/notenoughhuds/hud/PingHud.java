@@ -22,7 +22,7 @@ import java.util.Optional;
 
 public class PingHud extends TextHud {
     public final NehBoolean useStatusPing = new NehBoolean("use_status_ping", false);
-    public ClientConnection cc;
+    public static ClientConnection cc;
     public long nextPingTime;
 
     public PingHud() {
@@ -46,7 +46,7 @@ public class PingHud extends TextHud {
             long l = Util.getMeasuringTimeMs();
             if (l > nextPingTime) {
                 nextPingTime = l + 15000;
-                new Thread(this::ping).start();
+                new Thread(PingHud::ping).start();
             }
             return mc.getCurrentServerEntry() == null ? -1 : (int) mc.getCurrentServerEntry().ping;
         }
@@ -58,7 +58,7 @@ public class PingHud extends TextHud {
 
     }
 
-    public void ping() {
+    public static void ping() {
         ServerInfo server = mc.getCurrentServerEntry();
         if (server == null) return;
         try {

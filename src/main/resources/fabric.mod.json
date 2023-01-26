@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "notenoughhuds",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "name": "NotEnoughHUDs",
   "description": "Adds a variety of different HUDs to the game.",
   "icon": "assets/notenoughhuds/textures/logo.png",

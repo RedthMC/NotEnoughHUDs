@@ -1,8 +1,17 @@
 package me.redth.notenoughhuds.gui.widget;
 
+import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.DrawableHelper;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.gui.widget.ClickableWidget;
+import net.minecraft.client.render.BufferBuilder;
+import net.minecraft.client.render.GameRenderer;
+import net.minecraft.client.render.Tessellator;
+import net.minecraft.client.render.VertexFormat;
+import net.minecraft.client.render.VertexFormats;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.MathHelper;
@@ -13,6 +22,8 @@ import java.util.List;
 
 public class GuiList<T extends GuiList.GuiListEntry> extends ClickableWidget {
     private static final MinecraftClient mc = MinecraftClient.getInstance();
+    public static final int SCROLL_BAR_WIDTH = 6;
+    protected final Screen screen;
     protected final List<T> entries = new ArrayList<>();
     protected boolean dragging;
     protected int scrollToMouseOffset;
@@ -20,14 +31,16 @@ public class GuiList<T extends GuiList.GuiListEntry> extends ClickableWidget {
     protected int scrollLength;
     public int length;
 
-    public GuiList(int x, int y, int width, int height) {
+    public GuiList(Screen screen, int x, int y, int width, int height) {
         super(x, y, width, height, Text.empty());
+        this.screen = screen;
+        scrollY = y;
         scrollLength = height;
     }
 
     public void addEntry(T entry) {
         entries.add(entry);
-        length = Math.max(length, entry.initialY + entry.getHeight() + 4);
+        length = Math.max(length, entry.initialY + entry.getHeight());
         scrollLength = height * height / length;
     }
 
@@ -42,7 +55,7 @@ public class GuiList<T extends GuiList.GuiListEntry> extends ClickableWidget {
     }
 
     protected boolean hoveringScrollBar(double mouseX, double mouseY) {
-        return scrollLength < height && mouseX >= x + width - 2 && mouseY >= scrollY && mouseX < x + width && mouseY < scrollY + scrollLength;
+        return scrollLength < height && mouseX >= x + width - SCROLL_BAR_WIDTH && mouseY >= scrollY && mouseX < x + width && mouseY < scrollY + scrollLength;
     }
 
     @Override
@@ -95,7 +108,7 @@ public class GuiList<T extends GuiList.GuiListEntry> extends ClickableWidget {
 
     public void scrollBy(int wheel) {
         if (scrollLength >= height) return;
-        scrollY = MathHelper.clamp(scrollY - wheel * 5, y, y + height - scrollLength);
+        scrollY = MathHelper.clamp(scrollY - wheel * 10, y, y + height - scrollLength);
         for (T entry : entries) {
             entry.y = entry.initialY - (scrollY - y) * length / height;
         }
@@ -112,9 +125,53 @@ public class GuiList<T extends GuiList.GuiListEntry> extends ClickableWidget {
         for (T entry : entries) {
             entry.render(matrix, mouseX, mouseY, delta);
         }
-//        drawCenteredTextWithShadow(matrix, mc.textRenderer, getMessage().asOrderedText(), x + width / 2, y + 4, 0xFFFFFF);
-        if (scrollLength < height) fill(matrix, x + width - 2, scrollY, x + width, scrollY + scrollLength, dragging || hoveringScrollBar(mouseX, mouseY) ? 0xFF555555 : 0xFFAAAAAA);
+        renderHorizontalShadow();
+        if (scrollLength < height) renderScrollBar(matrix);
 
+    }
+
+    protected void renderHorizontalShadow() {
+        Tessellator tessellator = Tessellator.getInstance();
+        BufferBuilder bufferBuilder = tessellator.getBuffer();
+        RenderSystem.setShader(GameRenderer::getPositionTexColorShader);
+        RenderSystem.setShaderTexture(0, DrawableHelper.OPTIONS_BACKGROUND_TEXTURE);
+        RenderSystem.enableDepthTest();
+        RenderSystem.depthFunc(519);
+        bufferBuilder.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_TEXTURE_COLOR); // top = 20 left = 0 bottom = height - 20
+        bufferBuilder.vertex(0D, y, -100D).texture(0F, 20F / 32F).color(64, 64, 64, 255).next();
+        bufferBuilder.vertex(screen.width, y, -100D).texture(screen.width / 32F, 20F / 32F).color(64, 64, 64, 255).next();
+        bufferBuilder.vertex(screen.width, 0D, -100D).texture(screen.width / 32F, 0F).color(64, 64, 64, 255).next();
+        bufferBuilder.vertex(0D, 0D, -100D).texture(0F, 0F).color(64, 64, 64, 255).next();
+        bufferBuilder.vertex(0D, screen.height, -100D).texture(0F, screen.height / 32F).color(64, 64, 64, 255).next();
+        bufferBuilder.vertex(screen.width, screen.height, -100D).texture(screen.width / 32F, screen.height / 32F).color(64, 64, 64, 255).next();
+        bufferBuilder.vertex(screen.width, y + height, -100D).texture(screen.width / 32F, (y + height) / 32F).color(64, 64, 64, 255).next();
+        bufferBuilder.vertex(0D, y + height, -100D).texture(0F, (y + height) / 32F).color(64, 64, 64, 255).next();
+        tessellator.draw();
+        RenderSystem.depthFunc(515);
+        RenderSystem.disableDepthTest();
+        RenderSystem.enableBlend();
+        RenderSystem.blendFuncSeparate(GlStateManager.SrcFactor.SRC_ALPHA, GlStateManager.DstFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SrcFactor.ZERO, GlStateManager.DstFactor.ONE);
+        RenderSystem.disableTexture();
+        RenderSystem.setShader(GameRenderer::getPositionColorShader);
+        bufferBuilder.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_COLOR);
+        bufferBuilder.vertex(0D, y + 4D, 0D).color(0, 0, 0, 0).next();
+        bufferBuilder.vertex(screen.width, y + 4D, 0D).color(0, 0, 0, 0).next();
+        bufferBuilder.vertex(screen.width, y, 0D).color(0, 0, 0, 255).next();
+        bufferBuilder.vertex(0D, y, 0D).color(0, 0, 0, 255).next();
+        bufferBuilder.vertex(0D, y + height, 0D).color(0, 0, 0, 255).next();
+        bufferBuilder.vertex(screen.width, y + height, 0D).color(0, 0, 0, 255).next();
+        bufferBuilder.vertex(screen.width, y + height - 4D, 0D).color(0, 0, 0, 0).next();
+        bufferBuilder.vertex(0D, y + height - 4D, 0D).color(0, 0, 0, 0).next();
+        tessellator.draw();
+    }
+
+    protected void renderScrollBar(MatrixStack matrix) {
+        int sX = x + width - SCROLL_BAR_WIDTH;
+        int sY = scrollY;
+        int sX2 = x + width;
+        int sY2 = scrollY + scrollLength;
+        fill(matrix, sX, sY, sX2, sY2, 0xFF808080);
+        fill(matrix, sX, sY, sX2 - 1, sY2 - 1, 0xFFC0C0C0);
     }
 
     @Override

@@ -54,7 +54,7 @@ public class EffectHud extends BaseHud {
     public void render(MatrixStack matrix) {
         if (effects.isEmpty()) return;
 
-        drawBg(matrix, backgroundColor);
+        drawBackground(matrix, backgroundColor);
 
         if (showName.get()) {
             int iconX;
@@ -74,10 +74,7 @@ public class EffectHud extends BaseHud {
 
             for (StatusEffectInstance effect : effects) {
                 drawIcon(matrix, iconX, y, effect);
-
-                int color = staticNameColor.get() ? nameOrAmpColor.asColor() : effect.getEffectType().getColor();
-
-                drawString(matrix, getNameAmp(effect), textX, y, color, textShadow.get(), align); // name + amp
+                drawString(matrix, getNameAmp(effect), textX, y, getColor(effect), textShadow.get(), align); // name + amp
                 drawString(matrix, StringHelper.formatTicks(effect.getDuration()), textX, y + 10, durationColor.asColor(), textShadow.get(), align); // dur
 
                 y += 20;
@@ -87,8 +84,7 @@ public class EffectHud extends BaseHud {
             int x = 7;
             for (StatusEffectInstance effect : effects) {
                 drawIcon(matrix, x, 2, effect);
-                int color = staticNameColor.get() ? nameOrAmpColor.asColor() : effect.getEffectType().getColor();
-                drawString(matrix, amplifierToString(effect.getAmplifier()), x + 23, 12, color, textShadow.get(), Alignment.RIGHT); // amp
+                drawString(matrix, amplifierToString(effect.getAmplifier()), x + 23, 12, getColor(effect), textShadow.get(), Alignment.RIGHT); // amp
                 drawString(matrix, StringHelper.formatTicks(effect.getDuration()), x + 11, 22, durationColor.asColor(), textShadow.get(), Alignment.CENTER); // dur
                 x += 28;
             }
@@ -126,6 +122,10 @@ public class EffectHud extends BaseHud {
         }
         return height;
     }
+	
+	private int getColor(StatusEffectInstance effect) {
+		return staticNameColor.get() ? nameOrAmpColor.asColor() : (effect.getEffectType().getColor() | 0xFF000000);
+	}
 
     public void drawIcon(MatrixStack matrix, int x, int y, StatusEffectInstance effect) {
         Sprite sprite = mc.getStatusEffectSpriteManager().getSprite(effect.getEffectType());

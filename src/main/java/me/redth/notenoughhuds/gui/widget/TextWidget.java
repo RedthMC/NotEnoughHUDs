@@ -72,7 +72,7 @@ public abstract class TextWidget extends OptionWidget {
 
             if (s.length() > 0) {
                 String s1 = inbound ? s.substring(0, j) : s;
-                j1 = tr.drawWithShadow(matrix, s1, x, y - 4, 0xFFFFFF);
+                j1 = tr.drawWithShadow(matrix, s1, x, y - 4, 0xFFFFFFFF);
             }
 
             boolean outbound = selectionStart < text.length() || text.length() >= maxLength;
@@ -374,26 +374,26 @@ public abstract class TextWidget extends OptionWidget {
     }
 
     protected void drawSelectionHighlight(int x1, int y1, int x2, int y2) {
-        // int i;
-        // if (x1 < x2) {
-        //     i = x1;
-        //     x1 = x2;
-        //     x2 = i;
-        // }
+         int i;
+         if (x1 < x2) {
+             i = x1;
+             x1 = x2;
+             x2 = i;
+         }
 
-        // if (y1 < y2) {
-        //     i = y1;
-        //     y1 = y2;
-        //     y2 = i;
-        // }
+         if (y1 < y2) {
+             i = y1;
+             y1 = y2;
+             y2 = i;
+         }
 
-        // if (x2 > editBox.getX() + editBox.getWidth()) {
-        //     x2 = editBox.getX() + editBox.getWidth();
-        // }
+         if (x2 > editBox.getX() + editBox.getWidth()) {
+             x2 = editBox.getX() + editBox.getWidth();
+         }
 
-        // if (x1 > editBox.getX() + editBox.getWidth()) {
-        //     x1 = editBox.getX() + editBox.getWidth();
-        // }
+         if (x1 > editBox.getX() + editBox.getWidth()) {
+             x1 = editBox.getX() + editBox.getWidth();
+         }
 
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder bufferBuilder = tessellator.getBuffer();

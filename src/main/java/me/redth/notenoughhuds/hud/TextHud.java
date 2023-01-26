@@ -55,7 +55,7 @@ public class TextHud extends BaseHud {
     @Override
     public void render(MatrixStack matrix) {
         if (showBg.get()) {
-            drawBg(matrix, backgroundColor);
+            drawBackground(matrix, backgroundColor);
             drawString(matrix, text, getWidth() / 2.0f, getHeight() / 2.0f - 4, textColor.asColor(), textShadow.get(), Alignment.CENTER);
         } else {
             drawString(matrix, text, 1, 0, textColor.asColor(), textShadow.get());

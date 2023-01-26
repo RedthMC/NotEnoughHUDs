@@ -1,13 +1,14 @@
 package me.redth.notenoughhuds.gui;
 
 import me.redth.notenoughhuds.NotEnoughHUDs;
-import me.redth.notenoughhuds.gui.widget.FlatButton;
-import me.redth.notenoughhuds.gui.widget.HudMenu;
 import me.redth.notenoughhuds.hud.BaseHud;
+import me.redth.notenoughhuds.utils.DrawUtils;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.screen.ScreenTexts;
 import net.minecraft.text.HoverEvent;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
@@ -16,13 +17,13 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 public class EditorScreen extends Screen {
-    public static final int HOVERING_COLOR = 0x80FFFFFF;
+    public static final int HOVERING_LINE = 0xFF00FFFF;
+    public static final int LINE_COLOR = 0xFFFF8000;
     private static final NotEnoughHUDs neh = NotEnoughHUDs.getInstance();
     private final Screen parent;
     private final boolean dirtBackground;
     private BaseHud hovering;
     private BaseHud dragging;
-    private HudMenu currentMenu;
     private final Set<Integer> edgeXs = new LinkedHashSet<>();
     private final Set<Integer> centerXs = new LinkedHashSet<>();
     private final Set<Integer> edgeYs = new LinkedHashSet<>();
@@ -38,10 +39,9 @@ public class EditorScreen extends Screen {
 
     @Override
     protected void init() {
-        currentMenu = null;
         client.keyboard.setRepeatEvents(true);
-        addDrawableChild(new FlatButton(width / 2 - 100, height / 2 + 12, 200, 20, "settings", b -> client.setScreenAndRender(new SettingsScreen(this))));
-        addDrawableChild(new FlatButton(width / 2 - 100, height / 2 + 34, 200, 20, "back", b -> client.setScreenAndRender(parent)));
+        addDrawableChild(new ButtonWidget(width / 2 - 100, height / 2 + 12, 200, 20, Text.of("HUDs"), b -> client.setScreenAndRender(new HudsScreen(this))));
+        addDrawableChild(new ButtonWidget(width / 2 - 100, height / 2 + 34, 200, 20, ScreenTexts.DONE, b -> client.setScreenAndRender(parent)));
     }
 
     @Override
@@ -62,18 +62,18 @@ public class EditorScreen extends Screen {
         }
         hovering = null;
         for (BaseHud hud : neh.hudManager.getEnabledHuds()) {
+            hud.drawOutline(matrix, LINE_COLOR);
             if (hud.getX() <= mouseX && mouseX < hud.getX() + hud.getScaledWidth() && hud.getY() <= mouseY && mouseY < hud.getY() + hud.getScaledHeight()) {
                 hovering = hud;
-                break;
             }
         }
 
         if (dragging != null) {
             dragging.setX(getSnappedX(matrix, mouseX));
             dragging.setY(getSnappedY(matrix, mouseY));
-            dragging.drawPad(matrix, HOVERING_COLOR);
+            dragging.drawOutline(matrix, HOVERING_LINE);
         } else if (hovering != null) {
-            hovering.drawPad(matrix, HOVERING_COLOR);
+            hovering.drawOutline(matrix, HOVERING_LINE);
             renderTextHoverEffect(matrix, Style.EMPTY.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, hovering.getTranslated())), mouseX, mouseY);
         }
 
@@ -87,10 +87,6 @@ public class EditorScreen extends Screen {
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         super.mouseClicked(mouseX, mouseY, button);
-        if (currentMenu != null && !currentMenu.isMouseOver(mouseX, mouseY)) {
-            remove(currentMenu);
-            currentMenu = null;
-        }
         if (hovering != null) {
             switch (button) {
                 case 0 -> {
@@ -208,13 +204,13 @@ public class EditorScreen extends Screen {
 
     public int drawLineX(MatrixStack matrix, int lineX, int snapX) {
         if (snapX >= 0 && snapX + dragging.getScaledWidth() < width)
-            drawVerticalLine(matrix, lineX, 0, height, 0xFF00FFAA);
+            DrawUtils.drawCenteredVerticalLine(matrix, lineX, 0, height, LINE_COLOR);
         return snapX;
     }
 
     public int drawLineY(MatrixStack matrix, int lineY, int snapY) {
         if (snapY >= 0 && snapY + dragging.getScaledHeight() < height)
-            drawHorizontalLine(matrix, 0, width, lineY, 0xFF00FFAA);
+            DrawUtils.drawCenteredHorizontalLine(matrix, 0, width, lineY, LINE_COLOR);
         return snapY;
     }
 }

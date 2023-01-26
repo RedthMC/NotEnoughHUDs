@@ -52,7 +52,7 @@ public class DirectionHud extends BaseHud {
             directions[i] = scaleOf(yaw, 8, i);
         }
 
-        drawBg(matrix, backgroundColor);
+        drawBackground(matrix, backgroundColor);
 
         float x = width / 2.0F;
 
@@ -60,7 +60,7 @@ public class DirectionHud extends BaseHud {
         float longs = height / 2.0F;
         float shorts = height / 4.0F;
         for (float f : lines) {
-            if (-0.5 < f && f < 0.5F) drawVerticalLine(matrix, x + f * width, 0, isLong ? longs : shorts, 0xFFAAAAAA);
+            if (-0.5 < f && f < 0.5F) drawCenteredVerticalLine(matrix, x + f * width, 0, isLong ? longs : shorts, 0xFFAAAAAA);
             isLong = !isLong;
         }
 
@@ -71,7 +71,7 @@ public class DirectionHud extends BaseHud {
             i++;
         }
 
-        drawVerticalLine(matrix, x, 0, height, 0xFFFF5555);
+        drawCenteredVerticalLine(matrix, x, 0, height, 0xFFFF5555);
     }
 
     @Override
