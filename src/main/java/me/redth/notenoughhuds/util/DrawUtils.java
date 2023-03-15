@@ -1,6 +1,6 @@
-package me.redth.notenoughhuds.utils;
+package me.redth.notenoughhuds.util;
 
-import me.redth.notenoughhuds.hud.BaseHud;
+import me.redth.notenoughhuds.hud.Hud;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.GlStateManager;
@@ -15,7 +15,7 @@ public class DrawUtils extends Gui {
     public static final Minecraft mc = Minecraft.getMinecraft();
 
     public static void drawTransparentBackground(int x, int y, int w, int h) {
-        drawScaledTexture(TRANSPARENT, x, y, 0, 0, w, h, 8, 8);
+        drawTexture(TRANSPARENT, x, y, 0, 0, w, h, 4, 4);
     }
 
     public static void drawTransparentBackground(Rectangle rect) {
@@ -101,28 +101,21 @@ public class DrawUtils extends Gui {
 
 
     public static int drawString(String text, float x, float y, int textColor, boolean textShadow) {
-        return drawString(text, x, y, textColor, textShadow, BaseHud.Alignment.LEFT);
+        return drawString(text, x, y, textColor, textShadow, Hud.Alignment.LEFT);
     }
 
-    public static int drawString(String text, float x, float y, int textColor, boolean textShadow, BaseHud.Alignment align) {
+    public static int drawString(String text, float x, float y, int textColor, boolean textShadow, Hud.Alignment align) {
         if (text.isEmpty()) return (int) x;
-        if (align == BaseHud.Alignment.CENTER) {
+        if (align == Hud.Alignment.CENTER) {
             x -= (mc.fontRendererObj.getStringWidth(text) - 1) / 2.0f;
-        } else if (align == BaseHud.Alignment.RIGHT) {
+        } else if (align == Hud.Alignment.RIGHT) {
             x -= mc.fontRendererObj.getStringWidth(text) - 1;
         }
         if (((textColor >> 24) & 255) < 10) return (int) x + mc.fontRendererObj.getStringWidth(text);
         return mc.fontRendererObj.drawString(text, x, y, textColor, textShadow);
     }
 
-    public void drawTexture(ResourceLocation texture, int x, int y, int textureX, int textureY, int width, int height) {
-        resetGl();
-        mc.getTextureManager().bindTexture(texture);
-        drawTexturedModalRect(x, y, textureX, textureY, width, height);
-        GlStateManager.disableBlend();
-    }
-
-    public static void drawScaledTexture(ResourceLocation texture, int x, int y, float u, float v, int width, int height, float textureWidth, float textureHeight) {
+    public static void drawTexture(ResourceLocation texture, int x, int y, float u, float v, int width, int height, float textureWidth, float textureHeight) {
         resetGl();
         mc.getTextureManager().bindTexture(texture);
         drawModalRectWithCustomSizedTexture(x, y, u, v, width, height, textureWidth, textureHeight);

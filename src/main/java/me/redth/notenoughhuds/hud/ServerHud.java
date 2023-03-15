@@ -14,7 +14,7 @@ import net.minecraft.util.ResourceLocation;
 
 import java.awt.image.BufferedImage;
 
-public class ServerHud extends BaseHud {
+public class ServerHud extends Hud {
     public static final ServerData PLACEHOLDER = new ServerData("Server", "server.ip", false);
     public static final ResourceLocation ICON = new ResourceLocation("notenoughhuds/server_icon");
     public static final ResourceLocation UNKNOWN = new ResourceLocation("textures/misc/unknown_server.png");
@@ -56,7 +56,7 @@ public class ServerHud extends BaseHud {
         drawBackground(backgroundColor);
         int x = 2;
         int y = 2;
-        drawScaledTexture(loaded ? ICON : UNKNOWN, x, y, 0.0F, 0.0F, 32, 32, 32.0F, 32.0F);
+        drawTexture(loaded ? ICON : UNKNOWN, x, y, 0.0F, 0.0F, 32, 32, 32.0F, 32.0F);
         drawString(server.serverIP, x + 34, y + 17 - 4.0F, nameColor.asInt(), textShadow.get());
     }
 

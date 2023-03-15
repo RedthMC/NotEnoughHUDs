@@ -1,7 +1,7 @@
 package me.redth.notenoughhuds.gui.widget;
 
 import me.redth.notenoughhuds.config.option.NehBoolean;
-import me.redth.notenoughhuds.utils.DrawUtils;
+import me.redth.notenoughhuds.util.DrawUtils;
 import net.minecraft.client.Minecraft;
 
 public class BooleanWidget extends OptionWidget {

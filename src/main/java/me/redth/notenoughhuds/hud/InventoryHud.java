@@ -10,7 +10,7 @@ import net.minecraft.util.ResourceLocation;
 import java.util.Arrays;
 import java.util.List;
 
-public class InventoryHud extends BaseHud {
+public class InventoryHud extends Hud {
     public final ResourceLocation CONTAINER_GUI = new ResourceLocation("notenoughhuds", "textures/inventory.png");
     public final NehBoolean showBg = new NehBoolean("show_background", true);
     private List<ItemStack> inventory = null;
@@ -22,7 +22,7 @@ public class InventoryHud extends BaseHud {
 
     @Override
     public void render() {
-        if (showBg.get()) drawScaledTexture(CONTAINER_GUI, 0, 0, 0, 0, 176, 67, 176, 67);
+        if (showBg.get()) drawTexture(CONTAINER_GUI, 0, 0, 0, 0, 176, 67, 176, 67);
 
         if (inventory == null) return;
 
@@ -31,7 +31,6 @@ public class InventoryHud extends BaseHud {
 
         RenderItem ri = mc.getRenderItem();
         zLevel = 100.0F;
-        ri.zLevel = 100.0F;
         GlStateManager.enableRescaleNormal();
         GlStateManager.enableBlend();
         GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
@@ -48,7 +47,6 @@ public class InventoryHud extends BaseHud {
         RenderHelper.disableStandardItemLighting();
         GlStateManager.disableBlend();
         GlStateManager.disableRescaleNormal();
-        zLevel = 0.0F;
         ri.zLevel = 0.0F;
 
     }

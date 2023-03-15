@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class ScoreboardHud extends BaseHud {
+public class ScoreboardHud extends Hud {
     public static final ScoreObjective PLACEHOLDER = new ScoreObjective(new Scoreboard(), "NotEnoughHUDs", IScoreObjectiveCriteria.DUMMY);
     public static final List<Score> DEFAULT_SCORES = ImmutableList.of(new Score(PLACEHOLDER.getScoreboard(), PLACEHOLDER, "Steve"), new Score(PLACEHOLDER.getScoreboard(), PLACEHOLDER, "Alex"));
     public final NehBoolean textShadow = new NehBoolean("text_shadow", true);

@@ -1,9 +1,8 @@
 package me.redth.notenoughhuds.gui;
 
-import me.redth.notenoughhuds.NotEnoughHUDs;
 import me.redth.notenoughhuds.config.option.NehOption;
 import me.redth.notenoughhuds.gui.widget.OptionWidget;
-import me.redth.notenoughhuds.hud.BaseHud;
+import me.redth.notenoughhuds.hud.Hud;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraftforge.fml.client.config.GuiButtonExt;
@@ -12,10 +11,8 @@ import org.lwjgl.input.Keyboard;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class SettingsScreen extends GuiScreen {
-    private static final NotEnoughHUDs neh = NotEnoughHUDs.getInstance();
-    private final GuiScreen parent;
-    public final BaseHud hud;
+public class SettingsScreen extends EditingScreen {
+    public final Hud hud;
     public ArrayList<OptionWidget> settings = new ArrayList<>();
 
     @Override
@@ -23,8 +20,8 @@ public class SettingsScreen extends GuiScreen {
         return false;
     }
 
-    public SettingsScreen(GuiScreen parent, BaseHud hud) {
-        this.parent = parent;
+    public SettingsScreen(GuiScreen parent, Hud hud) {
+        super(parent);
         this.hud = hud;
     }
 
@@ -59,7 +56,7 @@ public class SettingsScreen extends GuiScreen {
     @Override
     protected void actionPerformed(GuiButton button) {
         if (button.id == 0) {
-            mc.displayGuiScreen(parent);
+            displayParent();
         } else if (button.id == 1) {
             hud.reset();
         }
@@ -87,7 +84,6 @@ public class SettingsScreen extends GuiScreen {
                 ((OptionWidget) b).tick();
             }
         }
-        if (!hud.isEnabled()) hud.tick();
     }
 
 }

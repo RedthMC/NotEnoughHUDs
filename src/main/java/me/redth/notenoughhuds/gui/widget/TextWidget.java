@@ -1,7 +1,7 @@
 package me.redth.notenoughhuds.gui.widget;
 
 import me.redth.notenoughhuds.config.option.NehOption;
-import me.redth.notenoughhuds.utils.DrawUtils;
+import me.redth.notenoughhuds.util.DrawUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiScreen;
@@ -126,6 +126,127 @@ public abstract class TextWidget extends OptionWidget {
 //            drawSelectionHighlight(o, y1 - 5, p - 1, y1 + 5);
 //        }
     }
+
+    @Override
+    public void tick() {
+        ++focusedTicks;
+    }
+
+    @Override
+    public void keyTyped(char chr, int keyCode) {
+        if (!textFieldFocused) {
+        } else if (GuiScreen.isKeyComboCtrlA(keyCode)) {
+            setCursorPositionEnd();
+            setSelectionPos(0);
+        } else if (GuiScreen.isKeyComboCtrlC(keyCode)) {
+            GuiScreen.setClipboardString(getSelectedText());
+        } else if (GuiScreen.isKeyComboCtrlV(keyCode)) {
+            if (enabled) {
+                writeText(GuiScreen.getClipboardString());
+            }
+
+        } else if (GuiScreen.isKeyComboCtrlX(keyCode)) {
+            GuiScreen.setClipboardString(getSelectedText());
+
+            if (enabled) {
+                writeText("");
+            }
+
+        } else {
+            switch (keyCode) {
+                case 14:
+
+                    if (GuiScreen.isCtrlKeyDown()) {
+                        if (enabled) {
+                            deleteWords(-1);
+                        }
+                    } else if (enabled) {
+                        deleteFromCursor(-1);
+                    }
+
+                    return;
+                case 199:
+
+                    if (GuiScreen.isShiftKeyDown()) {
+                        setSelectionPos(0);
+                    } else {
+                        setCursorPositionZero();
+                    }
+
+                    return;
+                case 203:
+
+                    if (GuiScreen.isShiftKeyDown()) {
+                        if (GuiScreen.isCtrlKeyDown()) {
+                            setSelectionPos(getNthWordFromPos(-1, selectionEnd));
+                        } else {
+                            setSelectionPos(selectionEnd - 1);
+                        }
+                    } else if (GuiScreen.isCtrlKeyDown()) {
+                        setSelectionStart(getNthWordFromCursor(-1));
+                    } else {
+                        moveCursorBy(-1);
+                    }
+
+                    return;
+                case 205:
+
+                    if (GuiScreen.isShiftKeyDown()) {
+                        if (GuiScreen.isCtrlKeyDown()) {
+                            setSelectionPos(getNthWordFromPos(1, selectionEnd));
+                        } else {
+                            setSelectionPos(selectionEnd + 1);
+                        }
+                    } else if (GuiScreen.isCtrlKeyDown()) {
+                        setSelectionStart(getNthWordFromCursor(1));
+                    } else {
+                        moveCursorBy(1);
+                    }
+
+                    return;
+                case 207:
+
+                    if (GuiScreen.isShiftKeyDown()) {
+                        setSelectionPos(text.length());
+                    } else {
+                        setCursorPositionEnd();
+                    }
+
+                    return;
+                case 211:
+
+                    if (GuiScreen.isCtrlKeyDown()) {
+                        if (enabled) {
+                            deleteWords(1);
+                        }
+                    } else if (enabled) {
+                        deleteFromCursor(1);
+                    }
+
+                    return;
+                default:
+                    if (charValidator.test(chr)) {
+                        if (enabled) {
+                            writeText(String.valueOf(chr));
+                        }
+                    }
+            }
+        }
+    }
+
+    @Override
+    public void onClick(int mouseX, int mouseY) {
+        boolean flag = editBox.contains(mouseX, mouseY);
+
+        setFocused(flag);
+
+        if (textFieldFocused && flag) {
+            int i = mouseX - (editBox.getX() + 2);
+            String s = fr.trimStringToWidth(text.substring(firstCharIndex), editBox.getWidth());
+            setSelectionStart(fr.trimStringToWidth(s, i).length() + firstCharIndex);
+        }
+    }
+
 
     public void setText(String str) {
         if (str.length() > maxLength) {
@@ -265,124 +386,6 @@ public abstract class TextWidget extends OptionWidget {
 
     public void setCursorPositionEnd() {
         setSelectionStart(text.length());
-    }
-
-    public void keyTyped(char chr, int keyCode) {
-        if (!textFieldFocused) {
-        } else if (GuiScreen.isKeyComboCtrlA(keyCode)) {
-            setCursorPositionEnd();
-            setSelectionPos(0);
-        } else if (GuiScreen.isKeyComboCtrlC(keyCode)) {
-            GuiScreen.setClipboardString(getSelectedText());
-        } else if (GuiScreen.isKeyComboCtrlV(keyCode)) {
-            if (enabled) {
-                writeText(GuiScreen.getClipboardString());
-            }
-
-        } else if (GuiScreen.isKeyComboCtrlX(keyCode)) {
-            GuiScreen.setClipboardString(getSelectedText());
-
-            if (enabled) {
-                writeText("");
-            }
-
-        } else {
-            switch (keyCode) {
-                case 14:
-
-                    if (GuiScreen.isCtrlKeyDown()) {
-                        if (enabled) {
-                            deleteWords(-1);
-                        }
-                    } else if (enabled) {
-                        deleteFromCursor(-1);
-                    }
-
-                    return;
-                case 199:
-
-                    if (GuiScreen.isShiftKeyDown()) {
-                        setSelectionPos(0);
-                    } else {
-                        setCursorPositionZero();
-                    }
-
-                    return;
-                case 203:
-
-                    if (GuiScreen.isShiftKeyDown()) {
-                        if (GuiScreen.isCtrlKeyDown()) {
-                            setSelectionPos(getNthWordFromPos(-1, selectionEnd));
-                        } else {
-                            setSelectionPos(selectionEnd - 1);
-                        }
-                    } else if (GuiScreen.isCtrlKeyDown()) {
-                        setSelectionStart(getNthWordFromCursor(-1));
-                    } else {
-                        moveCursorBy(-1);
-                    }
-
-                    return;
-                case 205:
-
-                    if (GuiScreen.isShiftKeyDown()) {
-                        if (GuiScreen.isCtrlKeyDown()) {
-                            setSelectionPos(getNthWordFromPos(1, selectionEnd));
-                        } else {
-                            setSelectionPos(selectionEnd + 1);
-                        }
-                    } else if (GuiScreen.isCtrlKeyDown()) {
-                        setSelectionStart(getNthWordFromCursor(1));
-                    } else {
-                        moveCursorBy(1);
-                    }
-
-                    return;
-                case 207:
-
-                    if (GuiScreen.isShiftKeyDown()) {
-                        setSelectionPos(text.length());
-                    } else {
-                        setCursorPositionEnd();
-                    }
-
-                    return;
-                case 211:
-
-                    if (GuiScreen.isCtrlKeyDown()) {
-                        if (enabled) {
-                            deleteWords(1);
-                        }
-                    } else if (enabled) {
-                        deleteFromCursor(1);
-                    }
-
-                    return;
-                default:
-                    if (charValidator.test(chr)) {
-                        if (enabled) {
-                            writeText(String.valueOf(chr));
-                        }
-                    }
-            }
-        }
-    }
-
-    public void onClick(int mouseX, int mouseY) {
-        boolean flag = editBox.contains(mouseX, mouseY);
-
-        setFocused(flag);
-
-        if (textFieldFocused && flag) {
-            int i = mouseX - (editBox.getX() + 2);
-            String s = fr.trimStringToWidth(text.substring(firstCharIndex), editBox.getWidth());
-            setSelectionStart(fr.trimStringToWidth(s, i).length() + firstCharIndex);
-        }
-    }
-
-    @Override
-    public void tick() {
-        ++focusedTicks;
     }
 
     public void highlight(int x1, int y1, int x2, int y2) {

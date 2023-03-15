@@ -26,10 +26,11 @@ public class NehCommand extends CommandBase {
     @Override
     public void processCommand(ICommandSender sender, String[] args) {
         if (args.length == 1 && "reload".equals(args[0])) {
+
             neh.config.load();
             sender.addChatMessage(new ChatComponentText("\u00a78[\u00a7aNEH\u00a78] \u00a7aConfig Reloaded!"));
             sender.addChatMessage(new ChatComponentText(Minecraft.getMinecraft().thePlayer.getNBTTagCompound().toString()));
-        } else neh.showScreen = true;
+        } else NotEnoughHUDs.showScreen = true;
     }
 
     @Override

@@ -1,6 +1,7 @@
 package me.redth.notenoughhuds.gui.widget;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.audio.SoundHandler;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
@@ -20,29 +21,29 @@ public class GuiList<T extends GuiList.GuiListEntry> extends GuiButton {
     public static final int SCROLL_BAR_WIDTH = 6;
     protected final List<T> entries = new ArrayList<>();
     protected final GuiScreen screen;
-    protected boolean dragging;
+    protected boolean draggingScrollBar;
     protected int scrollToMouseOffset;
-    public int scrollY;
-    protected int scrollLength;
+    public int scrollBarY;
+    protected int scrollBarLength;
     public int length;
 
     public GuiList(GuiScreen screen, int id, int x, int y, int width, int height) {
         super(id, x, y, width, height, null);
         this.screen = screen;
-        scrollY = y;
-        scrollLength = height;
+        scrollBarY = y;
+        scrollBarLength = height;
     }
 
     public void addEntry(T entry) {
         entries.add(entry);
         length = Math.max(length, entry.initialY + entry.height);
-        scrollLength = height * height / length;
+        scrollBarLength = height * height / length;
     }
 
     public void clearEntries() {
         entries.clear();
         length = 0;
-        scrollLength = 0;
+        scrollBarLength = 0;
     }
 
     public List<T> getEntries() {
@@ -50,30 +51,32 @@ public class GuiList<T extends GuiList.GuiListEntry> extends GuiButton {
     }
 
     protected boolean hoveringScrollBar(int mouseX, int mouseY) {
-        return scrollLength < height && mouseX >= xPosition + width - SCROLL_BAR_WIDTH && mouseY >= scrollY && mouseX < xPosition + width && mouseY < scrollY + scrollLength;
+        return scrollBarLength < height && mouseX >= xPosition + width - SCROLL_BAR_WIDTH && mouseY >= scrollBarY && mouseX < xPosition + width && mouseY < scrollBarY + scrollBarLength;
     }
 
     @Override
     public boolean mousePressed(Minecraft mc, int mouseX, int mouseY) {
         for (T entry : entries) {
-            if (entry.mousePressed(mc, mouseX, mouseY))
+            if (entry.mousePressed(mc, mouseX, mouseY)) {
+                entry.playPressSound(mc.getSoundHandler());
                 return true;
+            }
         }
         if (hoveringScrollBar(mouseX, mouseY)) {
-            dragging = true;
-            scrollToMouseOffset = mouseY - scrollY;
+            draggingScrollBar = true;
+            scrollToMouseOffset = mouseY - scrollBarY;
             scrollTo(mouseY);
-            return false;
+            return true;
         }
         return false;
     }
 
     @Override
     protected void mouseDragged(Minecraft mc, int mouseX, int mouseY) {
-        for (T entry : entries) {
-            entry.accessDrag(mc, mouseX, mouseY);
-        }
-        if (dragging) {
+//        for (T entry : entries) {
+//            entry.accessDrag(mc, mouseX, mouseY);
+//        }
+        if (draggingScrollBar) {
             scrollTo(mouseY);
         }
     }
@@ -83,23 +86,28 @@ public class GuiList<T extends GuiList.GuiListEntry> extends GuiButton {
         for (T entry : entries) {
             entry.mouseReleased(mouseX, mouseY);
         }
-        dragging = false;
+        draggingScrollBar = false;
     }
 
     public void scrollTo(int mouseY) {
-        if (scrollLength >= height) return;
-        scrollY = MathHelper.clamp_int(mouseY - scrollToMouseOffset, yPosition, yPosition + height - scrollLength);
+        if (scrollBarLength >= height) return;
+        scrollBarY = MathHelper.clamp_int(mouseY - scrollToMouseOffset, yPosition, yPosition + height - scrollBarLength);
         for (T entry : entries) {
-            entry.yPosition = entry.initialY - (scrollY - yPosition) * length / height;
+            entry.yPosition = entry.initialY - (scrollBarY - yPosition) * length / height;
         }
     }
 
     public void scrollBy(int wheel) {
-        if (scrollLength >= height) return;
-        scrollY = MathHelper.clamp_int(scrollY - wheel / 10, yPosition, yPosition + height - scrollLength);
+        if (scrollBarLength >= height) return;
+        scrollBarY = MathHelper.clamp_int(scrollBarY - wheel / 10, yPosition, yPosition + height - scrollBarLength);
         for (T entry : entries) {
-            entry.yPosition = entry.initialY - (scrollY - yPosition) * length / height;
+            entry.yPosition = entry.initialY - (scrollBarY - yPosition) * length / height;
         }
+    }
+
+
+    @Override
+    public void playPressSound(SoundHandler soundHandlerIn) {
     }
 
     @Override
@@ -112,7 +120,7 @@ public class GuiList<T extends GuiList.GuiListEntry> extends GuiButton {
 //        drawCenteredString(mc.fontRendererObj, displayString, xPosition + width / 2, yPosition + 4, 0xFFFFFF);
 //        if (scrollLength < height) drawRect(xPosition + width - 2, scrollY, xPosition + width, scrollY + scrollLength, dragging || hoveringScrollBar(mouseX, mouseY) ? 0xFF555555 : 0xFFAAAAAA);
         renderHorizontalShadow();
-        if (scrollLength < height) renderScrollBar();
+        if (scrollBarLength < height) renderScrollBar();
 
         GlStateManager.enableTexture2D();
         GlStateManager.shadeModel(7424);
@@ -157,9 +165,9 @@ public class GuiList<T extends GuiList.GuiListEntry> extends GuiButton {
 
     protected void renderScrollBar() {
         int sX = xPosition + width - SCROLL_BAR_WIDTH;
-        int sY = scrollY;
+        int sY = scrollBarY;
         int sX2 = xPosition + width;
-        int sY2 = scrollY + scrollLength;
+        int sY2 = scrollBarY + scrollBarLength;
         drawRect(sX, sY, sX2, sY2, 0xFF808080);
         drawRect(sX, sY, sX2 - 1, sY2 - 1, 0xFFC0C0C0);
     }
@@ -172,8 +180,8 @@ public class GuiList<T extends GuiList.GuiListEntry> extends GuiButton {
             initialY = y;
         }
 
-        public void accessDrag(Minecraft mc, int mouseX, int mouseY) {
-            mouseDragged(mc, mouseX, mouseY);
-        }
+//        public void accessDrag(Minecraft mc, int mouseX, int mouseY) {
+//            mouseDragged(mc, mouseX, mouseY);
+//        }
     }
 }

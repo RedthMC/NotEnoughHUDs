@@ -7,7 +7,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.MathHelper;
 import org.lwjgl.opengl.GL11;
 
-public class DirectionHud extends BaseHud {
+public class DirectionHud extends Hud {
     public static final String[] DIRECTIONS = new String[] {"S", "SW", "W", "NW", "N", "NE", "E", "SE"};
     public final NehBoolean textShadow = new NehBoolean("text_shadow", true);
     public final NehColor backgroundColor = new NehColor("background_color", "80000000");

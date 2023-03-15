@@ -1,7 +1,6 @@
 package me.redth.notenoughhuds.hud;
 
 import net.minecraft.client.Minecraft;
-import net.minecraftforge.client.event.MouseEvent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,14 +19,12 @@ public class CpsHud extends TextHud {
         int rightCps = getRightCps();
         return this.format.get().replaceAll("%left%", String.valueOf(leftCps)).replaceAll("%right%", String.valueOf(rightCps));
     }
-    public static void updateCps(MouseEvent e) {
-        if (!e.buttonstate) return;
-        if (e.button == 0) {
+
+    public static void updateCps(int keycode) {
+        if (keycode == mc.gameSettings.keyBindAttack.getKeyCode())
             leftClicks.add(Minecraft.getSystemTime());
-        }
-        if (e.button ==1) {
+        else if (keycode == mc.gameSettings.keyBindUseItem.getKeyCode())
             rightClicks.add(Minecraft.getSystemTime());
-        }
     }
 
     public static int getLeftCps() {

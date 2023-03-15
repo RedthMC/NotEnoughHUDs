@@ -18,7 +18,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
-public class ArmorHud extends BaseHud {
+public class ArmorHud extends Hud {
     public static final List<ItemStack> ARMORS = ImmutableList.of(new ItemStack(Items.diamond_helmet), new ItemStack(Items.diamond_chestplate), new ItemStack(Items.diamond_leggings), new ItemStack(Items.diamond_boots));
     public static final ItemStack SWORD = new ItemStack(Items.diamond_sword);
     public final NehBoolean textShadow = new NehBoolean("text_shadow", true);
@@ -67,7 +67,6 @@ public class ArmorHud extends BaseHud {
 
         RenderItem ri = mc.getRenderItem();
         ri.zLevel = 100.0F;
-        zLevel = 100.0F;
         GlStateManager.enableRescaleNormal();
         GlStateManager.enableBlend();
         GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
@@ -99,7 +98,6 @@ public class ArmorHud extends BaseHud {
         GlStateManager.disableBlend();
         GlStateManager.disableRescaleNormal();
         ri.zLevel = 0.0F;
-        zLevel = 0.0F;
     }
 
     @Override

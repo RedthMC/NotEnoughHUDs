@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class CoordsHud extends BaseHud {
+public class CoordsHud extends Hud {
     public final NehBoolean textShadow = new NehBoolean("text_shadow", true);
     public final NehColor backgroundColor = new NehColor("background_color", "80000000");
     public final NehBoolean showYaw = new NehBoolean("show_yaw", true);

@@ -1,7 +1,7 @@
 package me.redth.notenoughhuds.gui.widget;
 
 import me.redth.notenoughhuds.config.option.NehColor;
-import me.redth.notenoughhuds.utils.DrawUtils;
+import me.redth.notenoughhuds.util.DrawUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
@@ -9,7 +9,6 @@ import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.MathHelper;
 import org.apache.commons.lang3.StringUtils;
-import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.Rectangle;
 
 import java.awt.Color;
@@ -105,13 +104,7 @@ public class ColorWidget extends TextWidget {
 
         if (dragging != null) {
             dragging.onDrag(mouseX, mouseY);
-            if (option.chroma) {
-                String a = Integer.toString((int) (alphaSlider.alpha * 255), 16);
-                if (a.length() == 1) a = "0" + a;
-                option.set(a + option.get().substring(2));
-            } else {
-                option.set((int) (alphaSlider.alpha * 255) << 24 | (0xFFFFFF & Color.HSBtoRGB(hueSlider.hue, satXBr.sat, satXBr.br)));
-            }
+            option.set((int) (alphaSlider.alpha * 255) << 24 | (0xFFFFFF & Color.HSBtoRGB(hueSlider.hue, satXBr.sat, satXBr.br)));
             syncValue();
         }
 

@@ -8,7 +8,7 @@ import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.util.MathHelper;
 import org.lwjgl.input.Keyboard;
 
-public class KeystrokesHud extends BaseHud {
+public class KeystrokesHud extends Hud {
     public final NehBoolean textShadow = new NehBoolean("text_shadow", true);
     public final NehColor backgroundColor = new NehColor("background_color", "80000000");
     public final NehColor textColor = new NehColor("text_color", "FFFFFFFF");
@@ -47,6 +47,13 @@ public class KeystrokesHud extends BaseHud {
         jump = new Key(mc.gameSettings.keyBindJump);
         attack = new Key(mc.gameSettings.keyBindAttack);
         use = new Key(mc.gameSettings.keyBindUseItem);
+    }
+
+    public void onInput(int keycode) {
+        if (!isEnabled()) return;
+        if (!showMouseButtons.get()) return;
+        attack.onInput(keycode);
+        use.onInput(keycode);
     }
 
     public static int getFadedColor(int from, int to, double percent) {
@@ -118,6 +125,7 @@ public class KeystrokesHud extends BaseHud {
 
     public final class Key {
         private final KeyBinding key;
+        private boolean quickPress;
         private long lastUnpressed;
         private long lastPressed;
 
@@ -126,13 +134,17 @@ public class KeystrokesHud extends BaseHud {
         }
 
         public void render(int x, int y, int width, int height, int cps) {
-            if (key.isKeyDown()) {
+            boolean pressed = key.isKeyDown() || quickPress;
+
+            if (quickPress) quickPress = false;
+
+            if (pressed) {
                 lastPressed = Minecraft.getSystemTime();
             } else {
                 lastUnpressed = Minecraft.getSystemTime();
             }
 
-            double percent = key.isKeyDown() ? 1.0D - fadePercentage(lastUnpressed) : fadePercentage(lastPressed);
+            double percent = pressed ? 1.0D - fadePercentage(lastUnpressed) : fadePercentage(lastPressed);
 
             drawRect(x, y, x + width, y + height, getFadedColor(backgroundColor.asInt(), pressedBackgroundColor.asInt(), percent));
             int tc = getFadedColor(textColor.asInt(), pressedTextColor.asInt(), percent);
@@ -153,6 +165,10 @@ public class KeystrokesHud extends BaseHud {
                 default:
                     return Keyboard.getKeyName(key.getKeyCode());
             }
+        }
+
+        public void onInput(int keycode) {
+            if (keycode == key.getKeyCode()) quickPress = true;
         }
 //
 //        public void onInput() {

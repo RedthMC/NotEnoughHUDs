@@ -1,11 +1,9 @@
 package me.redth.notenoughhuds.gui.widget;
 
 import me.redth.notenoughhuds.config.option.NehOption;
-import me.redth.notenoughhuds.utils.DrawUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraftforge.fml.client.config.GuiButtonExt;
-import net.minecraftforge.fml.client.config.GuiUtils;
 import org.lwjgl.util.Rectangle;
 
 public abstract class OptionWidget extends GuiButtonExt {

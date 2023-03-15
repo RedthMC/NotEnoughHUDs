@@ -5,7 +5,7 @@ import me.redth.notenoughhuds.config.option.NehColor;
 import me.redth.notenoughhuds.config.option.NehString;
 import net.minecraft.client.settings.KeyBinding;
 
-public class SprintHud extends BaseHud {
+public class SprintHud extends Hud {
     public final NehBoolean toggleSprint = new NehBoolean("toggle_sprint", true);
     public final NehColor textColor = new NehColor("text_color", "FFFFFFFF");
     public final NehBoolean textShadow = new NehBoolean("text_shadow", true);
@@ -24,10 +24,12 @@ public class SprintHud extends BaseHud {
         sprintKey = mc.gameSettings.keyBindSprint;
     }
 
-    public void onInput() {
-        if (toggleSprint.get() && sprintKey.isPressed()) {
-            sprintToggled = !sprintToggled;
-        }
+    public void onInput(int keycode) {
+        if (!isEnabled()) return;
+        if (!toggleSprint.get()) return;
+        if (keycode != mc.gameSettings.keyBindSprint.getKeyCode()) return;
+
+        sprintToggled = !sprintToggled;
     }
 
     public void tick() {

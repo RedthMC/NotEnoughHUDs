@@ -20,6 +20,7 @@ public class ReachHud extends TextHud {
     }
 
     public void updateReach(AttackEntityEvent e) {
+        if (!isEnabled()) return;
         if (e.entityPlayer.equals(mc.thePlayer) && mc.objectMouseOver != null) {
             reach = mc.thePlayer.getPositionEyes(1.0F).distanceTo(mc.objectMouseOver.hitVec);
             lastHit = Minecraft.getSystemTime();

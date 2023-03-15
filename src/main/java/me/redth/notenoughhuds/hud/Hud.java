@@ -6,10 +6,8 @@ import me.redth.notenoughhuds.config.option.NehColor;
 import me.redth.notenoughhuds.config.option.NehEnum;
 import me.redth.notenoughhuds.config.option.NehInteger;
 import me.redth.notenoughhuds.config.option.NehOption;
-import me.redth.notenoughhuds.gui.EditorScreen;
-import me.redth.notenoughhuds.gui.HudsScreen;
-import me.redth.notenoughhuds.gui.SettingsScreen;
-import me.redth.notenoughhuds.utils.DrawUtils;
+import me.redth.notenoughhuds.gui.EditingScreen;
+import me.redth.notenoughhuds.util.DrawUtils;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
@@ -17,7 +15,7 @@ import net.minecraft.util.ResourceLocation;
 import java.util.LinkedList;
 import java.util.List;
 
-public abstract class BaseHud extends DrawUtils {
+public abstract class Hud extends DrawUtils {
     protected static final NotEnoughHUDs neh = NotEnoughHUDs.getInstance();
     public static int screenWidth;
     public static int screenHeight;
@@ -33,11 +31,12 @@ public abstract class BaseHud extends DrawUtils {
     private int y;
     protected int width;
     protected int height;
-    protected int scaledWidth;
-    protected int scaledHeight;
+    private int scaledWidth;
+    private int scaledHeight;
+    public boolean shouldTick = true;
 
     public static boolean isEditing() {
-        return mc.currentScreen instanceof EditorScreen || mc.currentScreen instanceof SettingsScreen || mc.currentScreen instanceof HudsScreen;
+        return mc.currentScreen instanceof EditingScreen;
     }
 
     public boolean isEnabled() {
@@ -57,7 +56,7 @@ public abstract class BaseHud extends DrawUtils {
         return "hud.notenoughhuds." + id;
     }
 
-    public BaseHud(String id) {
+    public Hud(String id) {
         this.id = id;
         icon = new ResourceLocation("notenoughhuds", "textures/icons/" + id + ".png");
         options.add(horAlign.hidden());
@@ -116,6 +115,10 @@ public abstract class BaseHud extends DrawUtils {
     }
 
     public void renderScaled() {
+        if (shouldTick) {
+            tick();
+            shouldTick = false;
+        }
         render(x, y, false);
     }
 
@@ -168,7 +171,7 @@ public abstract class BaseHud extends DrawUtils {
     }
 
     public void drawOutline(int color) {
-        drawOutline(x, y, x + scaledWidth, y + scaledHeight, color);
+        drawOutline(x, y, x + scaledWidth, y + scaledHeight, 0.2F, color);
     }
 
     protected void drawBackground(NehColor backgroundColor) {

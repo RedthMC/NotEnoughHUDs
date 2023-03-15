@@ -1,9 +1,8 @@
 package me.redth.notenoughhuds.gui;
 
 import com.google.common.collect.ImmutableList;
-import me.redth.notenoughhuds.NotEnoughHUDs;
-import me.redth.notenoughhuds.hud.BaseHud;
-import me.redth.notenoughhuds.utils.DrawUtils;
+import me.redth.notenoughhuds.hud.Hud;
+import me.redth.notenoughhuds.util.DrawUtils;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
@@ -17,13 +16,11 @@ import java.io.IOException;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-public class EditorScreen extends GuiScreen {
+public class EditorScreen extends EditingScreen {
     public static final int HOVERING_LINE = 0xFF00FFFF;
     public static final int LINE_COLOR = 0xFFFF8000;
-    private static final NotEnoughHUDs neh = NotEnoughHUDs.getInstance();
-    private final GuiScreen parent;
-    public BaseHud hovering;
-    public BaseHud dragging;
+    public Hud hovering;
+    public Hud dragging;
     private final Set<Integer> edgeXs = new LinkedHashSet<>();
     private final Set<Integer> centerXs = new LinkedHashSet<>();
     private final Set<Integer> edgeYs = new LinkedHashSet<>();
@@ -32,12 +29,7 @@ public class EditorScreen extends GuiScreen {
     private int yOffset;
 
     public EditorScreen(GuiScreen parent) {
-        this.parent = parent;
-    }
-
-    @Override
-    public boolean doesGuiPauseGame() {
-        return false;
+        super(parent);
     }
 
     @Override
@@ -48,27 +40,28 @@ public class EditorScreen extends GuiScreen {
     }
 
     @Override
+    public void onGuiClosed() {
+        Keyboard.enableRepeatEvents(false);
+        neh.config.save();
+    }
+
+
+    @Override
     protected void actionPerformed(GuiButton button) {
         switch (button.id) {
             case 0:
                 mc.displayGuiScreen(new HudsScreen(this)); // *
                 break;
             case 1:
-                mc.displayGuiScreen(parent);
+                displayParent();
                 break;
         }
     }
 
     @Override
-    public void onGuiClosed() {
-        Keyboard.enableRepeatEvents(false);
-        neh.config.save();
-    }
-
-    @Override
     public void drawScreen(int mouseX, int mouseY, float delta) {
         hovering = null;
-        for (BaseHud hud : neh.hudManager.getEnabledHuds()) {
+        for (Hud hud : neh.hudManager.getEnabledHuds()) {
             hud.drawOutline(LINE_COLOR);
             if (hud.getX() <= mouseX && mouseX < hud.getX() + hud.getScaledWidth() && hud.getY() <= mouseY && mouseY < hud.getY() + hud.getScaledHeight()) {
                 hovering = hud;
@@ -154,7 +147,7 @@ public class EditorScreen extends GuiScreen {
         centerXs.add(width / 2);
         centerYs.add(height / 2);
 
-        for (BaseHud hud : neh.hudManager.getEnabledHuds()) {
+        for (Hud hud : neh.hudManager.getEnabledHuds()) {
             if (hud.equals(dragging)) continue;
 
             int hx = hud.getX();

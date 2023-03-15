@@ -6,7 +6,7 @@ import me.redth.notenoughhuds.config.option.NehInteger;
 import me.redth.notenoughhuds.config.option.NehString;
 
 
-public class TextHud extends BaseHud {
+public class TextHud extends Hud {
     public final NehBoolean textShadow = new NehBoolean("text_shadow", true);
     public final NehColor backgroundColor = new NehColor("background_color", "80000000");
     public final NehBoolean showBg = new NehBoolean("show_background", true);

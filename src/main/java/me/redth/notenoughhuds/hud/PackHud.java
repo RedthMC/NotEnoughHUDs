@@ -12,7 +12,7 @@ import net.minecraft.util.ResourceLocation;
 import java.util.Collections;
 import java.util.List;
 
-public class PackHud extends BaseHud implements IResourceManagerReloadListener {
+public class PackHud extends Hud implements IResourceManagerReloadListener {
     public static final ResourceLocation PLACEHOLDER = new ResourceLocation("textures/misc/unknown_pack.png");
     public final NehBoolean textShadow = new NehBoolean("text_shadow", true);
     public final NehColor backgroundColor = new NehColor("background_color", "80000000");

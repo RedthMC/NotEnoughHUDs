@@ -14,7 +14,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-public class EffectHud extends BaseHud {
+public class EffectHud extends Hud {
     public static final List<PotionEffect> PLACEHOLDER = ImmutableList.of(new PotionEffect(Potion.fireResistance.id, 60000), new PotionEffect(Potion.moveSpeed.id, 20));
     public final NehBoolean textShadow = new NehBoolean("text_shadow", true);
     public final NehColor backgroundColor = new NehColor("background_color", "80000000");
@@ -133,7 +133,7 @@ public class EffectHud extends BaseHud {
     public void drawIcon(int x, int y, PotionEffect effect) {
         if (getPotionFromEffect(effect).hasStatusIcon()) {
             int i = getPotionFromEffect(effect).getStatusIconIndex();
-            drawTexture(new ResourceLocation("textures/gui/container/inventory.png"), x, y, i % 8 * 18, 198 + i / 8 * 18, 18, 18);
+            drawTexture(new ResourceLocation("textures/gui/container/inventory.png"), x, y, i % 8 * 18, 198 + i / 8 * 18, 18, 18, 256, 256);
         }
     }
 
