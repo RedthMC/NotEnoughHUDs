@@ -1,3 +1,5 @@
+archived due to not enough time and oneconfig taking over
+
 # NotEnoughHUDs
 
 `/notenoughhuds` or `/neh` to open HUD editor
